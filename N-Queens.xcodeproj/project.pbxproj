@@ -24,6 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B1D92BD72F9535B20013DF01 /* N-QueensKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "N-QueensKit"; sourceTree = "<group>"; };
 		B1F8A7E92F9272B40015DCE1 /* N-Queens.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "N-Queens.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1F8A7F62F9272B40015DCE1 /* N-QueensTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "N-QueensTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1F8A8002F9272B40015DCE1 /* N-QueensUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "N-QueensUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,16 +34,6 @@
 		B1F8A7EB2F9272B40015DCE1 /* N-Queens */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "N-Queens";
-			sourceTree = "<group>";
-		};
-		B1F8A7F92F9272B40015DCE1 /* N-QueensTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "N-QueensTests";
-			sourceTree = "<group>";
-		};
-		B1F8A8032F9272B40015DCE1 /* N-QueensUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "N-QueensUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +66,8 @@
 		B1F8A7E02F9272B40015DCE1 = {
 			isa = PBXGroup;
 			children = (
+				B1D92BD72F9535B20013DF01 /* N-QueensKit */,
 				B1F8A7EB2F9272B40015DCE1 /* N-Queens */,
-				B1F8A7F92F9272B40015DCE1 /* N-QueensTests */,
-				B1F8A8032F9272B40015DCE1 /* N-QueensUITests */,
 				B1F8A7EA2F9272B40015DCE1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +120,6 @@
 			dependencies = (
 				B1F8A7F82F9272B40015DCE1 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				B1F8A7F92F9272B40015DCE1 /* N-QueensTests */,
-			);
 			name = "N-QueensTests";
 			packageProductDependencies = (
 			);
@@ -152,9 +139,6 @@
 			);
 			dependencies = (
 				B1F8A8022F9272B40015DCE1 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				B1F8A8032F9272B40015DCE1 /* N-QueensUITests */,
 			);
 			name = "N-QueensUITests";
 			packageProductDependencies = (
