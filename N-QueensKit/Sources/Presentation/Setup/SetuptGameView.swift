@@ -1,5 +1,5 @@
 //
-//  StartGameView.swift
+//  SetuptGameView.swift
 //  N-QueensKit
 //
 //  Created by Pablo Romero on 19/04/2026.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct StartGameView: View {
-    @Bindable var model: StartGameModel
+struct SetuptGameView: View {
+    @Bindable var model: SetupGameModel
 
     var body: some View {
         VStack(spacing: 32) {

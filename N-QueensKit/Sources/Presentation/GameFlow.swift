@@ -18,10 +18,12 @@ public struct GameFlow: View {
 
     public var body: some View {
         NavigationStack(path: $route) {
-            StartGameView(
-                model: StartGameModel(startGame: { boardSize in
-                    route.append(.game(boardSize))
-                })
+            SetuptGameView(
+                model: SetupGameModel(
+                    startGame: { boardSize in
+                        route.append(.game(boardSize))
+                    }
+                )
             )
             .navigationDestination(for: Route.self) { route in
                 switch route {
@@ -29,7 +31,9 @@ public struct GameFlow: View {
                     GameView(
                         model: GameModel(
                             boardSize: boardSize,
-                            restartGame: {}
+                            exitGame: {
+                                self.route.removeAll()
+                            }
                         )
                     )
                 }
