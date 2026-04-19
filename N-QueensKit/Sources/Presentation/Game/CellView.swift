@@ -9,20 +9,20 @@ import SwiftUI
 
 
 struct CellView: View {
-    let model: CellModel
-    let onTap: () -> Void
+    let cell: Cell
+    let onTap: (Position) -> Void
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: { onTap(cell.position) }) {
             ZStack {
                 Rectangle()
                     .fill(backgroundColor)
 
-                if model.hasQueen {
+                if cell.hasQueen {
                     Text("\u{265B}")
                         .font(.system(size: 200))
                         .minimumScaleFactor(0.01)
-                        .foregroundStyle(model.isConflicting ? .red : .primary)
+                        .foregroundStyle(cell.isConflicting ? .red : .primary)
                         .padding(2)
                         .transition(.scale.combined(with: .opacity))
                 }
@@ -30,15 +30,15 @@ struct CellView: View {
         }
         .buttonStyle(.plain)
         .aspectRatio(1, contentMode: .fit)
-        .accessibilityIdentifier(model.accessibilityIdentifier)
-        .accessibilityLabel(model.accessibilityLabel)
-        .animation(.spring(duration: 0.3), value: model.hasQueen)
-        .animation(.easeInOut(duration: 0.2), value: model.isConflicting)
+        .accessibilityIdentifier(cell.accessibilityIdentifier)
+        .accessibilityLabel(cell.accessibilityLabel)
+        .animation(.spring(duration: 0.3), value: cell.hasQueen)
+        .animation(.easeInOut(duration: 0.2), value: cell.isConflicting)
     }
 
     private var backgroundColor: Color {
-        guard model.isConflicting else  {
-            return model.isLightSquare ? Color(.systemGray5) : Color(.systemGray3)
+        guard cell.isConflicting else  {
+            return cell.isLightSquare ? Color(.systemGray5) : Color(.systemGray3)
         }
         
         return .red.opacity(0.3)
@@ -47,78 +47,66 @@ struct CellView: View {
 
 #Preview("Dark square") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: false,
             isConflicting: false,
             isLightSquare: false,
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }
 
 #Preview("Light square") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: false,
             isConflicting: false,
             isLightSquare: true,
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }
 
 #Preview("Dark square with queen") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: true,
             isConflicting: false,
             isLightSquare: false
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }
 
 #Preview("Light square with queen") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: true,
             isConflicting: false,
             isLightSquare: true
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }
 
 #Preview("Dark square with conflict") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: true,
             isConflicting: true,
             isLightSquare: false
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }
 
 #Preview("Light square with conflict") {
     CellView(
-        model: .init(
-            row: 0,
-            column: 0,
+        cell: .init(
             hasQueen: true,
             isConflicting: true,
             isLightSquare: true
         ),
-        onTap: {}
+        onTap: { _ in }
     )
 }

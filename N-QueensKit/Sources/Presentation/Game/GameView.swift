@@ -13,8 +13,8 @@ struct GameView: View {
     var body: some View {
         VStack(spacing: 16) {
             QueensRemainingView(
-                placed: model.placedQueens,
-                total: model.cells.count
+                placed: model.placedQueensCount,
+                total: model.boardSize
             )
             
             BoardView(
