@@ -3,23 +3,33 @@
 
 import PackageDescription
 
+let swiftSettings: Array<SwiftSetting> = [
+    .swiftLanguageMode(.v6),
+    .defaultIsolation(MainActor.self)
+]
+
 let package = Package(
     name: "N-QueensKit",
+    platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-        .library(
-            name: "N-QueensKit",
-            targets: ["Data", "Domain", "Presentation"]
-        ),
+//        .library(name: "Common", targets: ["Common"]),
+        .library(name: "Data", targets: ["Data"]),
+        .library(name: "Domain", targets: ["Domain"]),
+//        .library(name: "Mocks", targets: ["Mocks"]),
+        .library(name: "Presentation", targets: ["Presentation"]),
     ],
     targets: [
         .target(
-            name: "Data"
+            name: "Data",
+            swiftSettings: swiftSettings
         ),
         .target(
-            name: "Domain"
+            name: "Domain",
+            swiftSettings: swiftSettings
         ),
         .target(
-            name: "Presentation"
+            name: "Presentation",
+            swiftSettings: swiftSettings
         ),
         .testTarget(
             name: "PresentationTests",

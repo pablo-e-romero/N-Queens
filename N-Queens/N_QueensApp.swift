@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Presentation
 
 @main
 struct N_QueensApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameFlow()
         }
     }
 }

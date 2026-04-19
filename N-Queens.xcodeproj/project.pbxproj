@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B1D92BE02F9541430013DF01 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BDF2F9541430013DF01 /* Data */; };
+		B1D92BE22F9541430013DF01 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BE12F9541430013DF01 /* Domain */; };
+		B1D92BE42F9541430013DF01 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BE32F9541430013DF01 /* Presentation */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B1F8A7F72F9272B40015DCE1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -43,6 +49,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1D92BE22F9541430013DF01 /* Domain in Frameworks */,
+				B1D92BE42F9541430013DF01 /* Presentation in Frameworks */,
+				B1D92BE02F9541430013DF01 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,11 +72,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B1D92BDE2F9541430013DF01 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B1F8A7E02F9272B40015DCE1 = {
 			isa = PBXGroup;
 			children = (
 				B1D92BD72F9535B20013DF01 /* N-QueensKit */,
 				B1F8A7EB2F9272B40015DCE1 /* N-Queens */,
+				B1D92BDE2F9541430013DF01 /* Frameworks */,
 				B1F8A7EA2F9272B40015DCE1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,6 +119,9 @@
 			);
 			name = "N-Queens";
 			packageProductDependencies = (
+				B1D92BDF2F9541430013DF01 /* Data */,
+				B1D92BE12F9541430013DF01 /* Domain */,
+				B1D92BE32F9541430013DF01 /* Presentation */,
 			);
 			productName = "N-Queens";
 			productReference = B1F8A7E92F9272B40015DCE1 /* N-Queens.app */;
@@ -562,6 +582,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B1D92BDF2F9541430013DF01 /* Data */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Data;
+		};
+		B1D92BE12F9541430013DF01 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
+		};
+		B1D92BE32F9541430013DF01 /* Presentation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Presentation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B1F8A7E12F9272B40015DCE1 /* Project object */;
 }
