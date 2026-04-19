@@ -27,7 +27,7 @@ final class GameModel {
     }
     
     let boardSize: Int
-    private(set) var cells: [[Cell]]
+    private(set) var board: [[Cell]]!
     private var placedQueens: Set<Position> = []
     private var conflictingPositions: Set<Position> = []
     
@@ -41,7 +41,7 @@ final class GameModel {
     ) {
         self.boardSize = boardSize
         self.exitGame = exitGame
-        self.cells = Self.makeCells(boardSize: boardSize)
+        self.board = makeBoard(size: boardSize)
     }
     
     func onAppear() {
@@ -49,15 +49,22 @@ final class GameModel {
     }
     
     func onCellTap(_ position: Position) {
-        if placedQueens.contains(position) {
+        let containsPosition = placedQueens.contains(position)
+        
+        guard containsPosition || placedQueensCount < boardSize else { return }
+        
+        if containsPosition {
             placedQueens.remove(position)
-        } else if placedQueensCount < boardSize {
+        } else {
             placedQueens.insert(position)
         }
         
-        conflictingPositions = calculateConflicts(Array(placedQueens))
-        cells = Self.makeCells(
-            boardSize: boardSize,
+        conflictingPositions = calculateConflictingPositions(
+            Array(placedQueens)
+        )
+        
+        board = makeBoard(
+            size: boardSize,
             placedQueens: placedQueens,
             conflictingPositions: conflictingPositions
         )
@@ -78,7 +85,7 @@ final class GameModel {
     func onRestart() {
         stopTimer()
         timeElapsed = 0
-        cells = Self.makeCells(boardSize: boardSize)
+        board = makeBoard(size: boardSize)
         placedQueens = []
         conflictingPositions = []
         startTimer()
@@ -107,16 +114,17 @@ private extension GameModel {
         timerTask = nil
     }
     
-    static func makeCells(
-        boardSize: Int,
+    func makeBoard(
+        size: Int,
         placedQueens: Set<Position> = [],
         conflictingPositions: Set<Position> = []
     ) -> [[Cell]] {
         var cells = [[Cell]]()
         
-        for row in (0..<boardSize) {
+        for row in 0..<boardSize {
             var rowCells = [Cell]()
-            for column in (0..<boardSize) {
+
+            for column in 0..<boardSize {
                 let position = Position(row: row, column: column)
                 rowCells.append(
                     Cell(
@@ -133,27 +141,31 @@ private extension GameModel {
         return cells
     }
     
-    func calculateConflicts(_ placedQueens: [Position]) -> Set<Position> {
-        func areConflicting(_ a: Position, _ b: Position) -> Bool {
-            if a.row == b.row { return true }
-            if a.column == b.column { return true }
-            if abs(a.row - b.row) == abs(a.column - b.column) { return true }
-            return false
+    func calculateConflictingPositions(
+        _ placedQueens: [Position]
+    ) -> Set<Position> {
+        func areConflicting(
+            _ first: Position,
+            _ second: Position
+        ) -> Bool {
+            first.row == second.row ||
+            first.column == second.column ||
+            abs(first.row - second.row) == abs(first.column - second.column)
         }
 
-        var conflicting = Set<Position>()
+        var conflictingPositions = Set<Position>()
 
         for i in 0..<placedQueens.count {
             for j in (i + 1)..<placedQueens.count {
-                let a = placedQueens[i]
-                let b = placedQueens[j]
-                if areConflicting(a, b) {
-                    conflicting.insert(a)
-                    conflicting.insert(b)
+                let first = placedQueens[i]
+                let second = placedQueens[j]
+                if areConflicting(first, second) {
+                    conflictingPositions.insert(first)
+                    conflictingPositions.insert(second)
                 }
             }
         }
 
-        return conflicting
+        return conflictingPositions
     }
 }

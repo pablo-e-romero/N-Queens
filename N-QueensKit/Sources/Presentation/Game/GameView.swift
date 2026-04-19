@@ -18,7 +18,7 @@ struct GameView: View {
             )
             
             BoardView(
-                cells: model.cells,
+                cells: model.board,
                 onCellTap: model.onCellTap
             )
             .padding(.horizontal)
