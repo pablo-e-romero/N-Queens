@@ -9,46 +9,63 @@ import SwiftUI
 
 struct SetuptGameView: View {
     @Bindable var model: SetupGameModel
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Text("♛")
+                .font(.system(size: 80))
+                .padding(.top, 20)
+                .padding(.bottom, 48)
+            
+            BoardSizeMenu(boardSize: $model.boardSize)
+                .padding(16)
+            
+            Button("Start Game") {
+                model.onStartGame()
+            }
+            .buttonStyle(.greenPrimary)
+            .padding(.horizontal, 16)
+            .accessibilityIdentifier("startButton")
+            
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.AppTheme.background)
+        .navigationTitle("N-Queens")
+        .navigationBarTitleDisplayMode(.large)
+    }
+}
+
+struct BoardSizeMenu: View {
+    @Binding var boardSize: Int
 
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-            
-            Text("N-Queens")
-                .font(.largeTitle.bold())
-            
-            Text("Place N queens on an N\u{00D7}N board so no two threaten each other")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-
-            VStack(spacing: 16) {
-                Text("Board Size")
+        Menu {
+            Picker("Board Size", selection: $boardSize) {
+                ForEach(Array(4...20), id: \.self) { size in
+                    Text("\(size) × \(size)").tag(size)
+                }
+            }
+        } label: {
+            HStack {
+                Image(systemName: "squareshape.split.2x2")
+                    .foregroundStyle(Color.AppTheme.tint)
+                    .font(.title3)
+                
+                Text("\(boardSize) × \(boardSize)")
                     .font(.headline)
-
-                Stepper(
-                    "\(model.boardSize) \u{00D7} \(model.boardSize)",
-                    value: $model.boardSize,
-                    in: 4...20
-                )
-                .font(.title2.monospacedDigit())
-                .padding(.horizontal, 40)
+                    .foregroundStyle(.white)
+                    .monospacedDigit()
+                
+                Spacer()
+                
+                Image(systemName: "chevron.down")
+                    .foregroundStyle(Color.AppTheme.tint)
+                    .font(.subheadline)
             }
-
-            Spacer()
-            
-            Button {
-                model.onStartGame()
-            } label: {
-                Text("Start Game")
-                    .font(.title3.bold())
-                    .frame(maxWidth: .infinity)
-                    .padding()
-            }
-            .buttonStyle(.borderedProminent)
-            .padding(.horizontal, 40)
-            .accessibilityIdentifier("startButton")
+            .padding(16)
+            .background(Color.AppTheme.secondaryBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
 }

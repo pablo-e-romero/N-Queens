@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct CellView: View {
     let cell: Cell
     let onTap: (Position) -> Void
@@ -16,13 +15,18 @@ struct CellView: View {
         Button(action: { onTap(cell.position) }) {
             ZStack {
                 Rectangle()
-                    .fill(backgroundColor)
+                    .fill(squareColor)
+
+                if cell.isConflicting {
+                    Rectangle()
+                        .fill(Color.AppTheme.conflictBackground)
+                }
 
                 if cell.hasQueen {
-                    Text("\u{265B}")
+                    Text("♛")
                         .font(.system(size: 200))
                         .minimumScaleFactor(0.01)
-                        .foregroundStyle(cell.isConflicting ? .red : .primary)
+                        .foregroundStyle(queenColor)
                         .padding(2)
                         .transition(.scale.combined(with: .opacity))
                 }
@@ -36,12 +40,15 @@ struct CellView: View {
         .animation(.easeInOut(duration: 0.2), value: cell.isConflicting)
     }
 
-    private var backgroundColor: Color {
-        guard cell.isConflicting else  {
-            return cell.isLightSquare ? Color(.systemGray5) : Color(.systemGray3)
-        }
-        
-        return .red.opacity(0.3)
+    private var squareColor: Color {
+        cell.isLightSquare ?
+        Color.AppTheme.lightCellBackground :
+        Color.AppTheme.darkCellBackground
+    }
+
+    private var queenColor: Color {
+        if cell.isConflicting { return Color.AppTheme.conflictForeground }
+        return Color.AppTheme.cellForeground
     }
 }
 

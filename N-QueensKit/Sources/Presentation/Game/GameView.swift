@@ -12,10 +12,19 @@ struct GameView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            QueensRemainingView(
-                placed: model.placedQueensCount,
-                total: model.boardSize
-            )
+            HStack {
+                QueensRemainingView(
+                    placed: model.placedQueensCount,
+                    total: model.boardSize
+                )
+                
+                Spacer()
+                
+                TimeElapsedView(
+                    timeElapsedFormatted: model.timeElapsedFormatted
+                )
+            }
+            .padding(.horizontal)
             
             BoardView(
                 cells: model.board,
@@ -24,10 +33,7 @@ struct GameView: View {
             .padding(.horizontal)
             
             if model.hasConflicts {
-                Text("Some queens are threatening each other!")
-                    .font(.caption)
-                    .foregroundStyle(.red)
-                    .transition(.opacity)
+                ConflictsView()
             }
             
             Spacer()
@@ -37,24 +43,66 @@ struct GameView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Back") {
-                    model.onExit()
-                }
+                Button(
+                    action: model.onExit,
+                    label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundStyle(Color.AppTheme.secondary)
+                    }
+                )
             }
             
             ToolbarItem(placement: .title) {
-                Text(model.timeElapsedFormatted)
-                    .font(.title2.monospacedDigit())
-                    .accessibilityIdentifier("timerLabel")
+                Text("N-Queens · \(model.boardSize)×\(model.boardSize)")
+                    .font(.title2)
+                    .foregroundStyle(Color.AppTheme.primary)
             }
             
             ToolbarItem(placement: .destructiveAction) {
-                Button("Restart") {
-                    model.onRestart()
-                }
+                Button(
+                    action: model.onRestart,
+                    label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .foregroundStyle(Color.AppTheme.secondary)
+                    }
+                )
             }
         }
+        .background(Color.AppTheme.background)
         .onAppear(perform: model.onAppear)
+    }
+}
+
+struct ConflictsView: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.caption)
+            Text("Queens in conflict")
+        }
+        .font(.title2)
+        .foregroundStyle(Color.AppTheme.conflictForeground)
+    }
+}
+
+struct TimeElapsedView: View {
+    let timeElapsedFormatted: String
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "clock.fill")
+                .font(.caption)
+            Text(timeElapsedFormatted)
+                .font(.title3.monospacedDigit().bold())
+        }
+        .foregroundStyle(Color.AppTheme.primary)
+        .padding(.horizontal, 12)
+        .frame(height: 33)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.AppTheme.secondaryBackground)
+        )
+        .accessibilityIdentifier("timeElapsed")
     }
 }
 
@@ -63,9 +111,19 @@ struct QueensRemainingView: View {
     let total: Int
     
     var body: some View {
-        Text("\(placed) / \(total) Queens")
-            .font(.headline)
-            .monospacedDigit()
-            .accessibilityIdentifier("queensRemaining")
+        HStack(spacing: 8) {
+            Text("♛")
+                .font(.title2.bold())
+            Text("\(placed) / \(total)")
+                .font(.title3.monospacedDigit().bold())
+        }
+        .foregroundStyle(Color.AppTheme.primary)
+        .padding(.horizontal, 12)
+        .frame(height: 33)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.AppTheme.secondaryBackground)
+        )
+        .accessibilityIdentifier("queensRemaining")
     }
 }

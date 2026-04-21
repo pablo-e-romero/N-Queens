@@ -39,5 +39,6 @@ public struct GameFlow: View {
                 }
             }
         }
+        .preferredColorScheme(.dark)
     }
 }
