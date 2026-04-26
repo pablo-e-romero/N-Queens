@@ -43,6 +43,7 @@ struct GameView: View {
                     .onAppear {
                         heavyFeedback.impactOccurred()
                     }
+                    .transition(.scale.combined(with: .opacity))
             } else if viewModel.gameState.won {
                 WonView(onPlayAgain: viewModel.onExit)
                     .transition(.move(edge: .bottom).combined(with: .opacity))

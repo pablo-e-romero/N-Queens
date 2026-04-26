@@ -21,12 +21,14 @@ struct CellView: View {
                 if cell.isConflicting {
                     Rectangle()
                         .fill(Color.AppTheme.conflictBackground)
+                        .transition(.opacity)
                 }
 
                 if cell.hasQueen {
                     Image("queen", bundle: .module)
                         .resizable()
                         .padding(4)
+                        .transition(.scale.combined(with: .opacity))
                 }
             }
         }
@@ -34,7 +36,8 @@ struct CellView: View {
         .aspectRatio(1, contentMode: .fit)
         .accessibilityIdentifier(cell.accessibilityIdentifier)
         .accessibilityLabel(cell.accessibilityLabel)
-        .animation(.spring(duration: 0.3), value: cell.hasQueen)
+        .animation(.spring(duration: 0.15), value: cell.hasQueen)
+        .animation(.easeInOut(duration: 0.15), value: cell.isConflicting)
     }
 
     private var squareColor: Color {
