@@ -2,6 +2,8 @@
 
 A game to solve the N-Queens problem: place N queens on an N×N board so that no two queens threaten each other.
 
+<video src="Demo/demo.mov" width="640" height="360" controls></video>
+
 ## Architecture
 
 The project is a Swift Package (`N-QueensKit`) structured around **Clean Architecture** principles with **MVVM** in the presentation layer. 
