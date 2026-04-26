@@ -26,7 +26,16 @@ struct GameSetupView: View {
             .buttonStyle(.greenPrimary)
             .padding(.horizontal, .AppTheme.padding)
             .accessibilityIdentifier("startButton")
-            
+
+            Button("Best Times") {
+                viewModel.onShowBestTimes()
+            }
+            .font(.title3.bold())
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, .AppTheme.padding)
+            .foregroundStyle(Color.AppTheme.tint)
+            .padding(.horizontal, .AppTheme.padding)
+
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -45,3 +45,9 @@ extension DependenciesContainer: GameViewModelFactory {
         )
     }
 }
+
+extension DependenciesContainer: BestTimesViewModelFactory {
+    func makeBestTimesViewModel() -> BestTimesViewModel {
+        BestTimesViewModel(wonGamesRepository: wonGamesRepository)
+    }
+}

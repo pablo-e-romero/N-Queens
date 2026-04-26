@@ -10,10 +10,11 @@ import Infrastructure
 
 enum Route: Hashable {
     case game(Int)
+    case bestTimes
 }
 
 public struct GameFlow: View {
-    public typealias Dependencies = GameViewModelFactory
+    public typealias Dependencies = GameViewModelFactory & BestTimesViewModelFactory
     let dependencies: Dependencies
 
     @State var route: [Route] = []
@@ -30,6 +31,9 @@ public struct GameFlow: View {
                 viewModel: GameSetupViewModel(
                     startGame: { boardSize in
                         route.append(.game(boardSize))
+                    },
+                    showBestTimes: {
+                        route.append(.bestTimes)
                     }
                 )
             )
@@ -46,6 +50,10 @@ public struct GameFlow: View {
                                 }
                             )
                         )
+                    )
+                case .bestTimes:
+                    BestTimesView(
+                        viewModel: dependencies.makeBestTimesViewModel()
                     )
                 }
             }
