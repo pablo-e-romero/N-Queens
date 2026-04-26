@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol TimeManagerProtocol: Sendable, AnyObject {
-    var onTimeUpdate: ((_ formattedTime: String) -> Void)? { get set }
+    var onTimeUpdate: ((_ timeInterval: TimeInterval) -> Void)? { get set }
     var timeElapsed: TimeInterval { get }
 
     func startTimer()

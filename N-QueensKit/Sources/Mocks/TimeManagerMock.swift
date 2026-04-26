@@ -10,13 +10,13 @@ import Foundation
 
 @MainActor
 public final class TimeManagerMock: TimeManagerProtocol {
-    public var onTimeUpdate: ((_ formattedTime: String) -> Void)?
+    public var onTimeUpdate: ((_ timeInterval: TimeInterval) -> Void)?
     public private(set) var timeElapsed: TimeInterval = 0
 
     public private(set) var startTimerCallCount = 0
     public private(set) var stopTimerCallCount = 0
 
-    public var stubbedFormattedTime: String = "00:00"
+    public var stubbedFormattedTime: TimeInterval = 0
 
     public init() {}
     

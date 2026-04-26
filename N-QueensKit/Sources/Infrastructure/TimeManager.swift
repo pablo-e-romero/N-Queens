@@ -34,12 +34,4 @@ public final class TimeManager: TimeManagerProtocol {
         timerTask?.cancel()
         timerTask = nil
     }
-    
-    func formatElpasedTime(_ timeElapsed: TimeInterval) -> String {
-        let totalSeconds = Int(timeElapsed)
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        let tenths = Int((timeElapsed - Double(totalSeconds)) * 10)
-        return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
-    }
 }

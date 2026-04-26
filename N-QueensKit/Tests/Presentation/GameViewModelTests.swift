@@ -57,9 +57,9 @@ struct GameViewModelTests {
 
     @Test func timeTickForwardsFormattedTime() {
         let (sut, timeManager, _) = makeViewModel()
-        timeManager.stubbedFormattedTime = "00:12.5"
+        timeManager.stubbedFormattedTime = 125
         timeManager.simulateTick()
-        #expect(sut.timeElapsedFormatted == "00:12.5")
+        #expect(sut.timeElapsedFormatted == "02:05.0")
     }
 
     // MARK: - Board
