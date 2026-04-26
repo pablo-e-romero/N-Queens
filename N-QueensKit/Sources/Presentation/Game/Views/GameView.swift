@@ -6,45 +6,49 @@
 //
 
 import SwiftUI
+import Domain
 
 struct GameView: View {
-    @State var model: GameModel
+    @State var viewModel: GameViewModel
     
     var body: some View {
         VStack(spacing: 16) {
             HStack {
                 QueensRemainingView(
-                    placed: model.placedQueensCount,
-                    total: model.boardSize
+                    placed: viewModel.gameState.placedQueensCount,
+                    total: viewModel.gameState.boardSize
                 )
                 
                 Spacer()
                 
                 TimeElapsedView(
-                    timeElapsedFormatted: model.timeElapsedFormatted
+                    timeElapsedFormatted: viewModel.timeElapsedFormatted
                 )
             }
             .padding(.horizontal)
             
             BoardView(
-                cells: model.board,
-                onCellTap: model.onCellTap
+                cells: viewModel.gameState.board,
+                onCellTap: viewModel.onCellTap
             )
             .padding(.horizontal)
             
-            if model.hasConflicts {
+            if viewModel.gameState.hasConflicts {
                 ConflictsView()
             }
             
             Spacer()
         }
         .padding(.top)
-        .animation(.easeInOut(duration: 0.3), value: model.hasConflicts)
+        .animation(
+            .easeInOut(duration: 0.3),
+            value: viewModel.gameState.hasConflicts
+        )
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(
-                    action: model.onExit,
+                    action: viewModel.onExit,
                     label: {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(Color.AppTheme.secondary)
@@ -53,14 +57,14 @@ struct GameView: View {
             }
             
             ToolbarItem(placement: .title) {
-                Text("N-Queens · \(model.boardSize)×\(model.boardSize)")
+                Text("N-Queens · \(viewModel.gameState.boardSize)×\(viewModel.gameState.boardSize)")
                     .font(.title2)
                     .foregroundStyle(Color.AppTheme.primary)
             }
             
             ToolbarItem(placement: .destructiveAction) {
                 Button(
-                    action: model.onRestart,
+                    action: viewModel.onReset,
                     label: {
                         Image(systemName: "arrow.counterclockwise")
                             .foregroundStyle(Color.AppTheme.secondary)
@@ -69,7 +73,7 @@ struct GameView: View {
             }
         }
         .background(Color.AppTheme.background)
-        .onAppear(perform: model.onAppear)
+        .onAppear(perform: viewModel.onAppear)
     }
 }
 

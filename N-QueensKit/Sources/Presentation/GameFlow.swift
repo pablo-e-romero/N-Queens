@@ -13,14 +13,20 @@ public enum Route: Hashable {
 }
 
 public struct GameFlow: View {
+    public typealias Dependencies = GameViewModelFactory
+    let dependencies: Dependencies
+
     @SwiftUI.State var route: [Route] = []
 
-    public init() {}
+    public init(dependencies: Dependencies) {
+        self.dependencies = dependencies
+        self.route = route
+    }
 
     public var body: some View {
         NavigationStack(path: $route) {
             SetuptGameView(
-                model: SetupGameModel(
+                viewModel: SetupGameViewModel(
                     startGame: { boardSize in
                         route.append(.game(boardSize))
                     }
@@ -30,12 +36,12 @@ public struct GameFlow: View {
                 switch route {
                 case let .game(boardSize):
                     GameView(
-                        model: GameModel(
+                        viewModel: dependencies.makeGameViewModel(
                             boardSize: boardSize,
-                            timeManager: TimeManager(),
-                            exitGame: {
-                                self.route.removeAll()
-                            }
+                            actions: GameViewModelActions(
+                                exitGame: { self.route.removeAll() },
+                                wonGame: { }
+                            )
                         )
                     )
                 }

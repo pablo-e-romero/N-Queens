@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Domain
 
 struct CellView: View {
     let cell: Cell

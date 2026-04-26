@@ -1,5 +1,5 @@
 //
-//  SetupGameModel.swift
+//  SetupGameViewModel.swift
 //  N-QueensKit
 //
 //  Created by Pablo Romero on 19/04/2026.
@@ -8,7 +8,7 @@
 import Observation
 
 @Observable
-final class SetupGameModel {
+final class SetupGameViewModel {
     var boardSize: Int
     let startGame: (Int) -> Void
     

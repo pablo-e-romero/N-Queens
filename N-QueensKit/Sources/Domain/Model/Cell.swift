@@ -1,23 +1,29 @@
 //
-//  CellModel.swift
+//  Cell.swift
 //  N-QueensKit
 //
 //  Created by Pablo Romero on 19/04/2026.
 //
 
-struct Position: Hashable {
-    let row: Int
-    let column: Int
-}
+public struct Cell {
+    public let position: Position
+    public let hasQueen: Bool
+    public let isConflicting: Bool
+    public let isLightSquare: Bool
+    public let accessibilityIdentifier: String
 
-struct Cell {
-    let position: Position
-    let hasQueen: Bool
-    let isConflicting: Bool
-    let isLightSquare: Bool
-    let accessibilityIdentifier: String
+    public var accessibilityLabel: String {
+        var label = "Row \(position.row + 1), Column \(position.column + 1)"
+        if hasQueen {
+            label += ", Queen"
+        }
+        if isConflicting {
+            label += ", Conflicting"
+        }
+        return label
+    }
 
-    init(
+    public init(
         position: Position = .init(row: 0, column: 0),
         hasQueen: Bool,
         isConflicting: Bool,
@@ -45,16 +51,5 @@ struct Cell {
             isLightSquare: (row + column) % 2 == 0,
             accessibilityIdentifier: "cell_\(row)_\(column)"
         )
-    }
-    
-    var accessibilityLabel: String {
-        var label = "Row \(position.row + 1), Column \(position.column + 1)"
-        if hasQueen {
-            label += ", Queen"
-        }
-        if isConflicting {
-            label += ", Conflicting"
-        }
-        return label
     }
 }

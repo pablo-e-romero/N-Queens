@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Domain
 
 struct BoardView: View {
     let cells: [[Cell]]

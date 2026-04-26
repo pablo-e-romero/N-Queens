@@ -10,9 +10,11 @@ import Presentation
 
 @main
 struct N_QueensApp: App {
+    static let dependencies: DependenciesContainer = .live
+    
     var body: some Scene {
         WindowGroup {
-            GameFlow()
+            GameFlow(dependencies: Self.dependencies)
         }
     }
 }

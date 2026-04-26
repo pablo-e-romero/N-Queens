@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SetuptGameView: View {
-    @Bindable var model: SetupGameModel
+    @Bindable var viewModel: SetupGameViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -17,11 +17,11 @@ struct SetuptGameView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 48)
             
-            BoardSizeMenu(boardSize: $model.boardSize)
+            BoardSizeMenu(boardSize: $viewModel.boardSize)
                 .padding(.AppTheme.padding)
             
             Button("Start Game") {
-                model.onStartGame()
+                viewModel.onStartGame()
             }
             .buttonStyle(.greenPrimary)
             .padding(.horizontal, .AppTheme.padding)
