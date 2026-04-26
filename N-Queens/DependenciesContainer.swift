@@ -12,15 +12,23 @@ import Presentation
 
 final class DependenciesContainer {
     let timeManager: TimeManagerProtocol
+    let wonGamesRepository: WonGamesRepositoryProtocol
 
-    init(timeManager: TimeManagerProtocol) {
+    init(
+        timeManager: TimeManagerProtocol,
+        wonGamesRepository: WonGamesRepositoryProtocol
+    ) {
         self.timeManager = timeManager
+        self.wonGamesRepository = wonGamesRepository
     }
 }
 
 extension DependenciesContainer {
     static var live: DependenciesContainer {
-        return .init(timeManager: TimeManager())
+        return .init(
+            timeManager: TimeManager(),
+            wonGamesRepository: WonGamesRepository()
+        )
     }
 }
 
@@ -32,6 +40,7 @@ extension DependenciesContainer: GameViewModelFactory {
         GameViewModel(
             gameModel: GameModel(boardSize: boardSize),
             timeManager: timeManager,
+            wonGamesRepository: wonGamesRepository,
             actions: actions
         )
     }

@@ -5,7 +5,7 @@
 //  Created by Pablo Romero on 26/04/2026.
 //
 
-public struct Position: Hashable {
+public struct Position: Hashable, Codable {
     public let row: Int
     public let column: Int
     

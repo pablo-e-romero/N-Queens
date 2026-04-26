@@ -45,17 +45,20 @@ public final class GameViewModel {
     private var gameModel: GameModel
     private let timeManager: TimeManagerProtocol
     private let boardBuilder: BoardBuilder
+    private let wonGamesRepository: WonGamesRepositoryProtocol
     private let actions: GameViewModelActions
     
     public init(
         gameModel: GameModel,
         timeManager: TimeManagerProtocol,
         boardBuilder: BoardBuilder = .init(),
+        wonGamesRepository: WonGamesRepositoryProtocol,
         actions: GameViewModelActions
     ) {
         self.gameModel = gameModel
         self.timeManager = timeManager
         self.boardBuilder = boardBuilder
+        self.wonGamesRepository = wonGamesRepository
         self.actions = actions
 
         let gameState = gameModel.state
@@ -73,18 +76,8 @@ public final class GameViewModel {
     
     func onCellTap(_ position: Position) {
         gameModel.updatePosition(position)
-
         refresh()
-
-        if gameState.won {
-            timeManager.stopTimer()
-            actions.wonGame(
-                GameViewModelActions.GameInfo(
-                    gameState: gameState,
-                    timeElapsedFormatted: timeElapsedFormatted
-                )
-            )
-        }
+        if gameState.won { handleWonGame() }
     }
     
     func onReset() {
@@ -104,5 +97,25 @@ private extension GameViewModel {
     func refresh() {
         gameState = gameModel.state
         board = boardBuilder.make(from: gameState)
+    }
+    
+    func handleWonGame() {
+        timeManager.stopTimer()
+        
+        actions.wonGame(
+            GameViewModelActions.GameInfo(
+                gameState: gameState,
+                timeElapsedFormatted: timeElapsedFormatted
+            )
+        )
+        
+        Task {
+            try await wonGamesRepository.saveGame(
+                WonGameInfo(
+                    timeElapsed: timeManager.timeElapsed,
+                    positions: Array(gameState.placedQueens)
+                )
+            )
+        }
     }
 }

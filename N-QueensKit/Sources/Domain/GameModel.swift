@@ -14,7 +14,7 @@ public final class GameModel {
     private let conflictingPositionsManager: ConflictingPositionsManager
     
     public init(
-        boardSize: Int = 4,
+        boardSize: Int,
         placedQueens: Set<Position> = [],
         conflictingPositionsManager: ConflictingPositionsManager = .init(),
     ) {
