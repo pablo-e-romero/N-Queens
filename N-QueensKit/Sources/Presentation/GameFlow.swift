@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Infrastructure
 
 enum Route: Hashable {
     case game(Int)
