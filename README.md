@@ -2,7 +2,7 @@
 
 A game to solve the N-Queens problem: place N queens on an N×N board so that no two queens threaten each other.
 
-![image](Demo/demo.gif)
+<img src="Demo/demo.gif" width="320" height="640" alt="Demo" />
 
 ## Architecture
 
