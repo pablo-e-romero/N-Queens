@@ -12,15 +12,15 @@ let package = Package(
     name: "N-QueensKit",
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-//        .library(name: "Common", targets: ["Common"]),
-        .library(name: "Data", targets: ["Data"]),
+        .library(name: "Infrastructure", targets: ["Infrastructure"]),
         .library(name: "Domain", targets: ["Domain"]),
-//        .library(name: "Mocks", targets: ["Mocks"]),
+        .library(name: "Mocks", targets: ["Mocks"]),
         .library(name: "Presentation", targets: ["Presentation"]),
     ],
     targets: [
         .target(
-            name: "Data",
+            name: "Infrastructure",
+            dependencies: ["Domain"],
             swiftSettings: swiftSettings
         ),
         .target(
@@ -28,7 +28,13 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .target(
+            name: "Mocks",
+            dependencies: ["Domain"],
+            swiftSettings: swiftSettings
+        ),
+        .target(
             name: "Presentation",
+            dependencies: ["Domain"],
             swiftSettings: swiftSettings
         ),
         .testTarget(

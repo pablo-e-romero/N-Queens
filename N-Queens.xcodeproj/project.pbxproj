@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B1D92BE02F9541430013DF01 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BDF2F9541430013DF01 /* Data */; };
 		B1D92BE22F9541430013DF01 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BE12F9541430013DF01 /* Domain */; };
 		B1D92BE42F9541430013DF01 /* Presentation in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BE32F9541430013DF01 /* Presentation */; };
+		B1D92BFA2F9E54CE0013DF01 /* Infrastructure in Frameworks */ = {isa = PBXBuildFile; productRef = B1D92BF92F9E54CE0013DF01 /* Infrastructure */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,8 +50,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1D92BE22F9541430013DF01 /* Domain in Frameworks */,
+				B1D92BFA2F9E54CE0013DF01 /* Infrastructure in Frameworks */,
 				B1D92BE42F9541430013DF01 /* Presentation in Frameworks */,
-				B1D92BE02F9541430013DF01 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,9 +119,9 @@
 			);
 			name = "N-Queens";
 			packageProductDependencies = (
-				B1D92BDF2F9541430013DF01 /* Data */,
 				B1D92BE12F9541430013DF01 /* Domain */,
 				B1D92BE32F9541430013DF01 /* Presentation */,
+				B1D92BF92F9E54CE0013DF01 /* Infrastructure */,
 			);
 			productName = "N-Queens";
 			productReference = B1F8A7E92F9272B40015DCE1 /* N-Queens.app */;
@@ -584,10 +584,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B1D92BDF2F9541430013DF01 /* Data */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Data;
-		};
 		B1D92BE12F9541430013DF01 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
@@ -595,6 +591,10 @@
 		B1D92BE32F9541430013DF01 /* Presentation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Presentation;
+		};
+		B1D92BF92F9E54CE0013DF01 /* Infrastructure */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Infrastructure;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

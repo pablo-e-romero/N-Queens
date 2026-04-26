@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Infrastructure
 
 public enum Route: Hashable {
     case game(Int)
@@ -31,6 +32,7 @@ public struct GameFlow: View {
                     GameView(
                         model: GameModel(
                             boardSize: boardSize,
+                            timeManager: TimeManager(),
                             exitGame: {
                                 self.route.removeAll()
                             }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Domain
 import Observation
 
 @Observable
@@ -20,30 +21,30 @@ final class GameModel {
     
     let boardSize: Int
     private(set) var board: [[Cell]]!
-    private(set) var timeElapsedFormatted: String!
+    private(set) var timeElapsedFormatted: String = ""
 
     private var placedQueens: Set<Position> = []
     private var conflictingPositions: Set<Position> = []
-    private var timeElapsed: TimeInterval = 0 {
-        didSet {
-            timeElapsedFormatted = formatElpasedTime(timeElapsed)
-        }
-    }
-    private var timerTask: Task<Void, Never>?
+    private var timeManager: TimeManagerProtocol
     private let exitGame: () -> Void
     
     init(
         boardSize: Int = 4,
+        timeManager: TimeManagerProtocol,
         exitGame: @escaping () -> Void
     ) {
         self.boardSize = boardSize
+        self.timeManager = timeManager
         self.exitGame = exitGame
         self.board = makeBoard(size: boardSize)
-        self.timeElapsedFormatted = formatElpasedTime(0)
+        
+        timeManager.onTimeUpdate = { [weak self] timeElapsedFormatted in
+            self?.timeElapsedFormatted = timeElapsedFormatted
+        }
     }
     
     func onAppear() {
-        startTimer()
+        timeManager.startTimer()
     }
     
     func onCellTap(_ position: Position) {
@@ -76,12 +77,11 @@ final class GameModel {
     }
     
     func onRestart() {
-        stopTimer()
-        timeElapsed = 0
+        timeManager.stopTimer()
         board = makeBoard(size: boardSize)
         placedQueens = []
         conflictingPositions = []
-        startTimer()
+        timeManager.startTimer()
     }
     
     func onExit() {
@@ -90,23 +90,6 @@ final class GameModel {
 }
 
 private extension GameModel {
-    func startTimer() {
-        guard timerTask == nil else { return }
-        timeElapsed = 0
-        timerTask = Task { [weak self] in
-            while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(100))
-                guard let self else { break }
-                self.timeElapsed += 0.1
-            }
-        }
-    }
-    
-    func stopTimer() {
-        timerTask?.cancel()
-        timerTask = nil
-    }
-    
     func makeBoard(
         size: Int,
         placedQueens: Set<Position> = [],
@@ -160,13 +143,5 @@ private extension GameModel {
         }
 
         return conflictingPositions
-    }
-    
-    func formatElpasedTime(_ timeElapsed: TimeInterval) -> String {
-        let totalSeconds = Int(timeElapsed)
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        let tenths = Int((timeElapsed - Double(totalSeconds)) * 10)
-        return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
     }
 }
