@@ -26,8 +26,8 @@ public struct GameFlow: View {
 
     public var body: some View {
         NavigationStack(path: $route) {
-            SetuptGameView(
-                viewModel: SetupGameViewModel(
+            GameSetupView(
+                viewModel: GameSetupViewModel(
                     startGame: { boardSize in
                         route.append(.game(boardSize))
                     }
