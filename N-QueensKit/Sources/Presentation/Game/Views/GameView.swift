@@ -10,7 +10,9 @@ import Domain
 
 struct GameView: View {
     @State var viewModel: GameViewModel
-    
+    private let softFeedback = UIImpactFeedbackGenerator(style: .soft)
+    private let heavyFeedback = UIImpactFeedbackGenerator(style: .heavy)
+
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -29,15 +31,19 @@ struct GameView: View {
             
             BoardView(
                 cells: viewModel.board,
-                onCellTap: viewModel.onCellTap
+                onCellTap: { position in
+                    softFeedback.impactOccurred()
+                    viewModel.onCellTap(position)
+                }
             )
             .padding(.horizontal)
             
             if viewModel.gameState.hasConflicts {
                 ConflictsView()
-            }
-            
-            if viewModel.gameState.won {
+                    .onAppear {
+                        heavyFeedback.impactOccurred()
+                    }
+            } else if viewModel.gameState.won {
                 WonView(onPlayAgain: viewModel.onExit)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
