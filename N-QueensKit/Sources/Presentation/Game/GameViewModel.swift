@@ -18,11 +18,18 @@ public protocol GameViewModelFactory {
 
 public struct GameViewModelActions {
     public let exitGame: () -> Void
-    public let wonGame: () -> Void
+
+    public struct GameInfo: Identifiable {
+        public let id = UUID()
+        let gameState: GameState
+        let timeElapsedFormatted: String
+    }
+    
+    public let wonGame: (GameInfo) -> Void
     
     public init(
         exitGame: @escaping () -> Void,
-        wonGame: @escaping () -> Void
+        wonGame: @escaping (GameInfo) -> Void
     ) {
         self.exitGame = exitGame
         self.wonGame = wonGame
@@ -71,7 +78,12 @@ public final class GameViewModel {
 
         if gameState.won {
             timeManager.stopTimer()
-            actions.wonGame()
+            actions.wonGame(
+                GameViewModelActions.GameInfo(
+                    gameState: gameState,
+                    timeElapsedFormatted: timeElapsedFormatted
+                )
+            )
         }
     }
     

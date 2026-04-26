@@ -8,7 +8,7 @@
 import SwiftUI
 import Infrastructure
 
-public enum Route: Hashable {
+enum Route: Hashable {
     case game(Int)
 }
 
@@ -16,8 +16,9 @@ public struct GameFlow: View {
     public typealias Dependencies = GameViewModelFactory
     let dependencies: Dependencies
 
-    @SwiftUI.State var route: [Route] = []
-
+    @State var route: [Route] = []
+    @State var won: GameViewModelActions.GameInfo?
+    
     public init(dependencies: Dependencies) {
         self.dependencies = dependencies
         self.route = route
@@ -40,7 +41,9 @@ public struct GameFlow: View {
                             boardSize: boardSize,
                             actions: GameViewModelActions(
                                 exitGame: { self.route.removeAll() },
-                                wonGame: { }
+                                wonGame: { gameInto in
+                                    self.won = gameInto
+                                }
                             )
                         )
                     )
@@ -48,5 +51,13 @@ public struct GameFlow: View {
             }
         }
         .preferredColorScheme(.dark)
+        .sheet(
+            item: $won,
+            onDismiss: { route.removeAll() }) { gameInfo in
+            WonView(gameInfo: gameInfo) {
+                won = nil
+                route.removeAll()
+            }
+        }
     }
 }
