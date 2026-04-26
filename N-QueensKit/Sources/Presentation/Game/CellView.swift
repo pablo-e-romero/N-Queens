@@ -29,6 +29,7 @@ struct CellView: View {
                         .foregroundStyle(queenColor)
                         .padding(2)
                         .transition(.scale.combined(with: .opacity))
+                        .animation(.easeInOut(duration: 0.3), value: cell.isConflicting)
                 }
             }
         }
@@ -37,18 +38,17 @@ struct CellView: View {
         .accessibilityIdentifier(cell.accessibilityIdentifier)
         .accessibilityLabel(cell.accessibilityLabel)
         .animation(.spring(duration: 0.3), value: cell.hasQueen)
-        .animation(.easeInOut(duration: 0.2), value: cell.isConflicting)
     }
 
     private var squareColor: Color {
         cell.isLightSquare ?
-        Color.AppTheme.lightCellBackground :
-        Color.AppTheme.darkCellBackground
+        .AppTheme.lightCellBackground :
+        .AppTheme.darkCellBackground
     }
 
     private var queenColor: Color {
-        if cell.isConflicting { return Color.AppTheme.conflictForeground }
-        return Color.AppTheme.cellForeground
+        if cell.isConflicting { return .AppTheme.conflictForeground }
+        return .AppTheme.cellForeground
     }
 }
 

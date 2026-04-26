@@ -12,7 +12,7 @@ struct GreenPrimaryButtonStyle: ButtonStyle {
         configuration.label
             .font(.title3.bold())
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 18)
+            .padding(.vertical, .AppTheme.padding)
             .background(
                 LinearGradient(
                     colors: [
@@ -24,9 +24,9 @@ struct GreenPrimaryButtonStyle: ButtonStyle {
                 )
             )
             .foregroundStyle(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .opacity(configuration.isPressed ? 0.85 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .clipShape(RoundedRectangle(cornerRadius: .AppTheme.cornerRadius))
+            .opacity(configuration.isPressed ? 0.85 : 1)
+            .scaleEffect(configuration.isPressed ? 0.9 : 1)
             .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }

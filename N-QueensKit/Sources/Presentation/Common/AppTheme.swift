@@ -5,6 +5,7 @@
 //  Created by Pablo Romero on 21/04/2026.
 //
 
+import Foundation
 import SwiftUI
 
 
@@ -25,5 +26,12 @@ extension Color {
         
         static let conflictBackground = Color.red.opacity(0.4)
         static let conflictForeground = Color.red
+    }
+}
+
+extension CGFloat {
+    enum AppTheme {
+        static let padding: CGFloat = 16
+        static let cornerRadius: CGFloat = 8
     }
 }

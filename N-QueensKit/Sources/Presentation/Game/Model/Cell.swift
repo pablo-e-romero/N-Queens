@@ -57,7 +57,4 @@ struct Cell {
         }
         return label
     }
-    
-//        hasQueen: boardState.hasQueen(at: position),
-//        isConflicting: conflicts.isConflicting(position),
 }

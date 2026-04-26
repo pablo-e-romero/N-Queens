@@ -10,14 +10,6 @@ import Observation
 
 @Observable
 final class GameModel {
-    var timeElapsedFormatted: String {
-        let totalSeconds = Int(timeElapsed)
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
-        let tenths = Int((timeElapsed - Double(totalSeconds)) * 10)
-        return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
-    }
-    
     var placedQueensCount: Int {
         placedQueens.count
     }
@@ -28,10 +20,15 @@ final class GameModel {
     
     let boardSize: Int
     private(set) var board: [[Cell]]!
+    private(set) var timeElapsedFormatted: String!
+
     private var placedQueens: Set<Position> = []
     private var conflictingPositions: Set<Position> = []
-    
-    private var timeElapsed: TimeInterval = 0
+    private var timeElapsed: TimeInterval = 0 {
+        didSet {
+            timeElapsedFormatted = formatElpasedTime(timeElapsed)
+        }
+    }
     private var timerTask: Task<Void, Never>?
     private let exitGame: () -> Void
     
@@ -42,6 +39,7 @@ final class GameModel {
         self.boardSize = boardSize
         self.exitGame = exitGame
         self.board = makeBoard(size: boardSize)
+        self.timeElapsedFormatted = formatElpasedTime(0)
     }
     
     func onAppear() {
@@ -68,12 +66,7 @@ final class GameModel {
             placedQueens: placedQueens,
             conflictingPositions: conflictingPositions
         )
-        
-//        let feedback = UIImpactFeedbackGenerator(style: hadQueen ? .light : .medium)
-//        feedback.impactOccurred()
-        
-//        soundManager.play(hadQueen ? .remove : .place)
-        
+
 //        if WinChecker.hasWon(state.boardState) {
 //            let finalTime = timer.stop()
 //            state.phase = .won(elapsedTime: finalTime)
@@ -167,5 +160,13 @@ private extension GameModel {
         }
 
         return conflictingPositions
+    }
+    
+    func formatElpasedTime(_ timeElapsed: TimeInterval) -> String {
+        let totalSeconds = Int(timeElapsed)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        let tenths = Int((timeElapsed - Double(totalSeconds)) * 10)
+        return String(format: "%02d:%02d.%d", minutes, seconds, tenths)
     }
 }

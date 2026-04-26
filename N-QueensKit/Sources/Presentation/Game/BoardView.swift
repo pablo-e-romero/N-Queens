@@ -24,10 +24,11 @@ struct BoardView: View {
                 }
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: .AppTheme.cornerRadius))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: .AppTheme.cornerRadius)
                 .stroke(.secondary, lineWidth: 2)
+                .foregroundStyle(Color.AppTheme.cellForeground)
         )
         .accessibilityIdentifier("chessboard")
     }

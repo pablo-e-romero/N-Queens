@@ -18,13 +18,13 @@ struct SetuptGameView: View {
                 .padding(.bottom, 48)
             
             BoardSizeMenu(boardSize: $model.boardSize)
-                .padding(16)
+                .padding(.AppTheme.padding)
             
             Button("Start Game") {
                 model.onStartGame()
             }
             .buttonStyle(.greenPrimary)
-            .padding(.horizontal, 16)
+            .padding(.horizontal, .AppTheme.padding)
             .accessibilityIdentifier("startButton")
             
             Spacer()
@@ -63,9 +63,9 @@ struct BoardSizeMenu: View {
                     .foregroundStyle(Color.AppTheme.tint)
                     .font(.subheadline)
             }
-            .padding(16)
+            .padding(.AppTheme.padding)
             .background(Color.AppTheme.secondaryBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: .AppTheme.cornerRadius))
         }
     }
 }
