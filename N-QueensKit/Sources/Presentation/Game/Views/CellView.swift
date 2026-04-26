@@ -24,13 +24,9 @@ struct CellView: View {
                 }
 
                 if cell.hasQueen {
-                    Text("♛")
-                        .font(.system(size: 200))
-                        .minimumScaleFactor(0.01)
-                        .foregroundStyle(queenColor)
-                        .padding(2)
-                        .transition(.scale.combined(with: .opacity))
-                        .animation(.easeInOut(duration: 0.3), value: cell.isConflicting)
+                    Image("queen", bundle: .module)
+                        .resizable()
+                        .padding(4)
                 }
             }
         }

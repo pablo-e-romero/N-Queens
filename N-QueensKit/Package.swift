@@ -35,6 +35,7 @@ let package = Package(
         .target(
             name: "Presentation",
             dependencies: ["Domain"],
+            resources: [.process("Common/Media.xcassets")],
             swiftSettings: swiftSettings
         ),
         .testTarget(
