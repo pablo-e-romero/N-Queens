@@ -32,22 +32,29 @@ public struct GameViewModelActions {
 @Observable
 public final class GameViewModel {
     private(set) var gameState: GameState
-    private(set) var timeElapsedFormatted: String = ""
+    private(set) var board: [[Cell]]
+    private(set) var timeElapsedFormatted = ""
 
     private var gameModel: GameModel
     private let timeManager: TimeManagerProtocol
+    private let boardBuilder: BoardBuilder
     private let actions: GameViewModelActions
     
     public init(
         gameModel: GameModel,
         timeManager: TimeManagerProtocol,
+        boardBuilder: BoardBuilder = .init(),
         actions: GameViewModelActions
     ) {
         self.gameModel = gameModel
         self.timeManager = timeManager
+        self.boardBuilder = boardBuilder
         self.actions = actions
-        self.gameState = gameModel.state
-        
+
+        let gameState = gameModel.state
+        self.gameState = gameState        
+        self.board = boardBuilder.make(from: gameState)
+
         timeManager.onTimeUpdate = { [weak self] timeElapsedFormatted in
             self?.timeElapsedFormatted = timeElapsedFormatted
         }
@@ -59,8 +66,9 @@ public final class GameViewModel {
     
     func onCellTap(_ position: Position) {
         gameModel.updatePosition(position)
-        gameState = gameModel.state
-        
+
+        refresh()
+
         if gameState.won {
             timeManager.stopTimer()
             actions.wonGame()
@@ -70,12 +78,19 @@ public final class GameViewModel {
     func onReset() {
         timeManager.stopTimer()
         gameModel.resetGame()
-        gameState = gameModel.state
+        refresh()
         timeManager.startTimer()
     }
     
     func onExit() {
         timeManager.stopTimer()
         actions.exitGame()
+    }
+}
+
+private extension GameViewModel {
+    func refresh() {
+        gameState = gameModel.state
+        board = boardBuilder.make(from: gameState)
     }
 }

@@ -5,28 +5,25 @@
 //  Created by Pablo Romero on 26/04/2026.
 //
 
-@MainActor
-public final class BoardBuilder {
+public struct BoardBuilder {
     public init() {}
     
-    func make(
-        size: Int,
-        placedQueens: Set<Position> = [],
-        conflictingPositions: Set<Position> = []
+    public func make(
+        from gameState: GameState
     ) -> [[Cell]] {
         var cells = [[Cell]]()
         
-        for row in 0..<size {
+        for row in 0..<gameState.boardSize {
             var rowCells = [Cell]()
 
-            for column in 0..<size {
+            for column in 0..<gameState.boardSize {
                 let position = Position(row: row, column: column)
                 rowCells.append(
                     Cell(
                         row: row,
                         column: column,
-                        hasQueen: placedQueens.contains(position),
-                        isConflicting: conflictingPositions.contains(position)
+                        hasQueen: gameState.placedQueens.contains(position),
+                        isConflicting: gameState.conflictingPositions.contains(position)
                     )
                 )
             }

@@ -7,7 +7,6 @@
 
 public struct GameState {
     public let boardSize: Int
-    public let board: [[Cell]]
     public let placedQueens: Set<Position>
     public let conflictingPositions: Set<Position>
     
@@ -26,12 +25,10 @@ public struct GameState {
     
     public init(
         boardSize: Int,
-        board: [[Cell]],
         placedQueens: Set<Position> = [],
         conflictingPositions: Set<Position> = []
     ) {
         self.boardSize = boardSize
-        self.board = board
         self.placedQueens = placedQueens
         self.conflictingPositions = conflictingPositions
     }

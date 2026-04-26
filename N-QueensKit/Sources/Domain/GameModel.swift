@@ -9,46 +9,44 @@ import Foundation
 
 @MainActor
 public final class GameModel {
-    public var state: GameState {
-        GameState(
-            boardSize: boardSize,
-            board: boardBuilder.make(
-                size: boardSize,
-                placedQueens: placedQueens,
-                conflictingPositions: conflictingPositionsManager.positions
-            ),
-            placedQueens: placedQueens,
-            conflictingPositions: conflictingPositionsManager.positions
-        )
-    }
-
-    private let boardSize: Int
+    public private(set) var state: GameState
     private var placedQueens: Set<Position>
-
     private let conflictingPositionsManager: ConflictingPositionsManager
-    private let boardBuilder: BoardBuilder
     
     public init(
         boardSize: Int = 4,
         placedQueens: Set<Position> = [],
         conflictingPositionsManager: ConflictingPositionsManager = .init(),
-        boardBuilder: BoardBuilder = .init()
     ) {
-        self.boardSize = boardSize
         self.placedQueens = placedQueens
         self.conflictingPositionsManager = conflictingPositionsManager
-        self.boardBuilder = boardBuilder
+        
+        state = GameState(
+            boardSize: boardSize,
+            placedQueens: placedQueens,
+            conflictingPositions: conflictingPositionsManager.positions
+        )
     }
     
     public func resetGame() {
         placedQueens.removeAll()
         conflictingPositionsManager.reset()
+        
+        state = GameState(
+            boardSize: state.boardSize,
+            placedQueens: placedQueens,
+            conflictingPositions: conflictingPositionsManager.positions
+        )
     }
     
     public func updatePosition(_ position: Position) {
         let containsPosition = placedQueens.contains(position)
         
-        guard containsPosition || placedQueens.count < boardSize else { return }
+        guard
+            containsPosition || placedQueens.count < state.boardSize
+        else {
+            return
+        }
         
         if containsPosition {
             placedQueens.remove(position)
@@ -57,5 +55,11 @@ public final class GameModel {
         }
         
         conflictingPositionsManager.calculate(with: Array(placedQueens))
+        
+        state = GameState(
+            boardSize: state.boardSize,
+            placedQueens: placedQueens,
+            conflictingPositions: conflictingPositionsManager.positions
+        )
     }
 }
