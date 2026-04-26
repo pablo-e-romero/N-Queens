@@ -39,7 +39,15 @@ let package = Package(
         ),
         .testTarget(
             name: "PresentationTests",
-            dependencies: ["Presentation"]
+            dependencies: ["Presentation", "Domain", "Mocks"],
+            path: "Tests/Presentation",
+            swiftSettings: swiftSettings
+        ),
+        .testTarget(
+            name: "DomainTests",
+            dependencies: ["Domain", "Mocks"],
+            path: "Tests/Domain",
+            swiftSettings: swiftSettings
         ),
     ],
     swiftLanguageModes: [.v6]

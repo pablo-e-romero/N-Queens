@@ -10,10 +10,10 @@ import Foundation
 
 @MainActor
 public final class WonGamesRepositoryMock: WonGamesRepositoryProtocol {
-    private(set) var saveGameCallCount = 0
-    private(set) var savedGames: [WonGameInfo] = []
+    public private(set) var saveGameCallCount = 0
+    public private(set) var savedGames: [WonGameInfo] = []
 
-    private(set) var fetchGameCallCount = 0
+    public private(set) var fetchGameCallCount = 0
     public var stubbedGames: [WonGameInfo] = []
     public var stubbedError: Error?
 
