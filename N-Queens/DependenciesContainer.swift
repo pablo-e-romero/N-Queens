@@ -35,13 +35,13 @@ extension DependenciesContainer {
 extension DependenciesContainer: GameViewModelFactory {
     func makeGameViewModel(
         boardSize: Int,
-        actions: GameViewModelActions,
+        exitGame: @escaping () -> Void
     ) -> GameViewModel {
         GameViewModel(
             gameModel: GameModel(boardSize: boardSize),
             timeManager: timeManager,
             wonGamesRepository: wonGamesRepository,
-            actions: actions
+            exitGame: exitGame
         )
     }
 }

@@ -18,8 +18,7 @@ struct GameViewModelTests {
 
     func makeViewModel(
         boardSize: Int = 4,
-        onExitGame: @escaping () -> Void = {},
-        onWonGame: @escaping (GameViewModelActions.GameInfo) -> Void = { _ in }
+        onExitGame: @escaping () -> Void = {}
     ) -> (GameViewModel, TimeManagerMock, WonGamesRepositoryMock) {
         let timeManager = TimeManagerMock()
         let repository = WonGamesRepositoryMock()
@@ -27,7 +26,7 @@ struct GameViewModelTests {
             gameModel: GameModel(boardSize: boardSize),
             timeManager: timeManager,
             wonGamesRepository: repository,
-            actions: GameViewModelActions(exitGame: onExitGame, wonGame: onWonGame)
+            exitGame: onExitGame
         )
         return (viewModel, timeManager, repository)
     }
@@ -96,12 +95,10 @@ struct GameViewModelTests {
     // MARK: - Win
 
     @Test func winningGameStopsTimerAndFiresAction() {
-        var wonInfo: GameViewModelActions.GameInfo?
-        let (sut, timeManager, _) = makeViewModel(onWonGame: { wonInfo = $0 })
+        let (sut, timeManager, _) = makeViewModel()
         placeWinningSolution(on: sut)
         #expect(sut.gameState.won)
         #expect(timeManager.stopTimerCallCount == 1)
-        #expect(wonInfo?.gameState.boardSize == 4)
     }
 
     @Test func winningGameSavesToRepository() async throws {

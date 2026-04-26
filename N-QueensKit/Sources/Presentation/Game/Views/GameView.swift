@@ -37,12 +37,21 @@ struct GameView: View {
                 ConflictsView()
             }
             
+            if viewModel.gameState.won {
+                WonView(onPlayAgain: viewModel.onExit)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+            
             Spacer()
         }
         .padding(.top)
         .animation(
             .easeInOut(duration: 0.3),
             value: viewModel.gameState.hasConflicts
+        )
+        .animation(
+            .spring(duration: 0.5, bounce: 0.2),
+            value: viewModel.gameState.won
         )
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -129,5 +138,29 @@ struct QueensRemainingView: View {
                 .fill(Color.AppTheme.secondaryBackground)
         )
         .accessibilityIdentifier("queensRemaining")
+    }
+}
+
+struct WonView: View {
+    let onPlayAgain: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("♛")
+                .font(.system(size: 64))
+                .padding(.top, 8)
+
+            Text("You Won!")
+                .font(.largeTitle.bold())
+                .foregroundStyle(Color.AppTheme.primary)
+
+            Button("Play Again", action: onPlayAgain)
+                .buttonStyle(.greenPrimary)
+                .padding(.horizontal, .AppTheme.padding)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.AppTheme.background)
     }
 }

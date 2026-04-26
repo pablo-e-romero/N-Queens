@@ -12,28 +12,8 @@ import Observation
 public protocol GameViewModelFactory {
     func makeGameViewModel(
         boardSize: Int,
-        actions: GameViewModelActions
+        exitGame: @escaping () -> Void
     ) -> GameViewModel
-}
-
-public struct GameViewModelActions {
-    public let exitGame: () -> Void
-
-    public struct GameInfo: Identifiable {
-        public let id = UUID()
-        let gameState: GameState
-        let timeElapsedFormatted: String
-    }
-    
-    public let wonGame: (GameInfo) -> Void
-    
-    public init(
-        exitGame: @escaping () -> Void,
-        wonGame: @escaping (GameInfo) -> Void
-    ) {
-        self.exitGame = exitGame
-        self.wonGame = wonGame
-    }
 }
 
 @Observable
@@ -46,20 +26,20 @@ public final class GameViewModel {
     private let timeManager: TimeManagerProtocol
     private let boardBuilder: BoardBuilder
     private let wonGamesRepository: WonGamesRepositoryProtocol
-    private let actions: GameViewModelActions
+    private let exitGame: () -> Void
     
     public init(
         gameModel: GameModel,
         timeManager: TimeManagerProtocol,
         boardBuilder: BoardBuilder = .init(),
         wonGamesRepository: WonGamesRepositoryProtocol,
-        actions: GameViewModelActions
+        exitGame: @escaping () -> Void
     ) {
         self.gameModel = gameModel
         self.timeManager = timeManager
         self.boardBuilder = boardBuilder
         self.wonGamesRepository = wonGamesRepository
-        self.actions = actions
+        self.exitGame = exitGame
 
         let gameState = gameModel.state
         self.gameState = gameState        
@@ -75,6 +55,8 @@ public final class GameViewModel {
     }
     
     func onCellTap(_ position: Position) {
+        guard !gameState.won else { return }
+
         gameModel.updatePosition(position)
         refresh()
         if gameState.won { handleWonGame() }
@@ -89,7 +71,7 @@ public final class GameViewModel {
     
     func onExit() {
         timeManager.stopTimer()
-        actions.exitGame()
+        exitGame()
     }
 }
 
@@ -101,13 +83,6 @@ private extension GameViewModel {
     
     func handleWonGame() {
         timeManager.stopTimer()
-        
-        actions.wonGame(
-            GameViewModelActions.GameInfo(
-                gameState: gameState,
-                timeElapsedFormatted: timeElapsedFormatted
-            )
-        )
         
         Task {
             try await wonGamesRepository.saveGame(

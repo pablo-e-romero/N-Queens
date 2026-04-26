@@ -6,11 +6,11 @@ import Domain
 
 @MainActor
 public final class TimeManager: TimeManagerProtocol {
-    public var onTimeUpdate: ((_ formattedTime: String) -> Void)?
+    public var onTimeUpdate: ((_ timeElapsed: TimeInterval) -> Void)?
 
     public private(set) var timeElapsed: TimeInterval = 0 {
         didSet {
-            onTimeUpdate?(formatElpasedTime(timeElapsed))
+            onTimeUpdate?(timeElapsed)
         }
     }
     

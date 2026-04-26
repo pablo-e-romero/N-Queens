@@ -18,7 +18,6 @@ public struct GameFlow: View {
     let dependencies: Dependencies
 
     @State var route: [Route] = []
-    @State var won: GameViewModelActions.GameInfo?
     
     public init(dependencies: Dependencies) {
         self.dependencies = dependencies
@@ -43,12 +42,7 @@ public struct GameFlow: View {
                     GameView(
                         viewModel: dependencies.makeGameViewModel(
                             boardSize: boardSize,
-                            actions: GameViewModelActions(
-                                exitGame: { self.route.removeAll() },
-                                wonGame: { gameInto in
-                                    self.won = gameInto
-                                }
-                            )
+                            exitGame: { self.route.removeAll() }
                         )
                     )
                 case .bestTimes:
@@ -59,13 +53,5 @@ public struct GameFlow: View {
             }
         }
         .preferredColorScheme(.dark)
-        .sheet(
-            item: $won,
-            onDismiss: { route.removeAll() }) { gameInfo in
-            WonView(gameInfo: gameInfo) {
-                won = nil
-                route.removeAll()
-            }
-        }
     }
 }
