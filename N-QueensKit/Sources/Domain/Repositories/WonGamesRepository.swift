@@ -9,5 +9,5 @@ import Foundation
 
 public protocol WonGamesRepositoryProtocol: Sendable {
     func saveGame(_ game: WonGameInfo) async throws
-    func fetchGame() async throws -> [WonGameInfo]
+    func fetchGames() async throws -> [WonGameInfo]
 }

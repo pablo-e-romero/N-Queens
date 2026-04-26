@@ -41,7 +41,7 @@ public final class BestTimesViewModel {
         
         do {
             let games = try await wonGamesRepository
-                .fetchGame()
+                .fetchGames()
                 .sorted { $0.timeElapsed < $1.timeElapsed }
                 .map {
                     WonGameInfo(

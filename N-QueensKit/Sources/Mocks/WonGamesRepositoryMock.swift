@@ -13,7 +13,7 @@ public final class WonGamesRepositoryMock: WonGamesRepositoryProtocol {
     public private(set) var saveGameCallCount = 0
     public private(set) var savedGames: [WonGameInfo] = []
 
-    public private(set) var fetchGameCallCount = 0
+    public private(set) var fetchGamesCallCount = 0
     public var stubbedGames: [WonGameInfo] = []
     public var stubbedError: Error?
 
@@ -25,8 +25,8 @@ public final class WonGamesRepositoryMock: WonGamesRepositoryProtocol {
         savedGames.append(game)
     }
 
-    public func fetchGame() async throws -> [WonGameInfo] {
-        fetchGameCallCount += 1
+    public func fetchGames() async throws -> [WonGameInfo] {
+        fetchGamesCallCount += 1
         if let error = stubbedError { throw error }
         return stubbedGames
     }

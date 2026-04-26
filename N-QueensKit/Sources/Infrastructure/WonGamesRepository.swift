@@ -19,13 +19,13 @@ public actor WonGamesRepository: WonGamesRepositoryProtocol {
     }
 
     public func saveGame(_ game: WonGameInfo) async throws {
-        var games = try await fetchGame()
+        var games = try await fetchGames()
         games.append(game)
         let data = try encoder.encode(games)
         userDefaults.set(data, forKey: key)
     }
 
-    public func fetchGame() async throws -> [WonGameInfo] {
+    public func fetchGames() async throws -> [WonGameInfo] {
         guard let data = userDefaults.data(forKey: key) else { return [] }
         return try decoder.decode([WonGameInfo].self, from: data)
     }

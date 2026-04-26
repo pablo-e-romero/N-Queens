@@ -41,7 +41,7 @@ struct BestTimesViewModelTests {
     @Test func onTaskFetchesFromRepository() async {
         let (sut, repository) = makeViewModel()
         await sut.onTask()
-        #expect(repository.fetchGameCallCount == 1)
+        #expect(repository.fetchGamesCallCount == 1)
     }
 
     @Test func onTaskWithEmptyResultSetsEmptyState() async {
