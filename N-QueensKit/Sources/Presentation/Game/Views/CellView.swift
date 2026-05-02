@@ -27,7 +27,9 @@ struct CellView: View {
                 if cell.hasQueen {
                     Image("queen", bundle: .module)
                         .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .padding(4)
+                        .frame(maxWidth: 66)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
@@ -52,34 +54,23 @@ struct CellView: View {
     }
 }
 
-#Preview("Dark square") {
-    CellView(
-        cell: .init(
-            hasQueen: false,
-            isConflicting: false,
-            isLightSquare: false,
-        ),
-        onTap: { _ in }
-    )
-}
-
 #Preview("Light square") {
     CellView(
-        cell: .init(
+        cell: Cell(
+            position: Position(row: 0, column: 0),
             hasQueen: false,
-            isConflicting: false,
-            isLightSquare: true,
+            isConflicting: false
         ),
         onTap: { _ in }
     )
 }
 
-#Preview("Dark square with queen") {
+#Preview("Dark square") {
     CellView(
-        cell: .init(
-            hasQueen: true,
-            isConflicting: false,
-            isLightSquare: false
+        cell: Cell(
+            position: Position(row: 0, column: 1),
+            hasQueen: false,
+            isConflicting: false
         ),
         onTap: { _ in }
     )
@@ -87,21 +78,21 @@ struct CellView: View {
 
 #Preview("Light square with queen") {
     CellView(
-        cell: .init(
+        cell: Cell(
+            position: Position(row: 0, column: 0),
             hasQueen: true,
-            isConflicting: false,
-            isLightSquare: true
+            isConflicting: false
         ),
         onTap: { _ in }
     )
 }
 
-#Preview("Dark square with conflict") {
+#Preview("Dark square with queen") {
     CellView(
-        cell: .init(
+        cell: Cell(
+            position: Position(row: 0, column: 1),
             hasQueen: true,
-            isConflicting: true,
-            isLightSquare: false
+            isConflicting: false
         ),
         onTap: { _ in }
     )
@@ -109,10 +100,21 @@ struct CellView: View {
 
 #Preview("Light square with conflict") {
     CellView(
-        cell: .init(
+        cell: Cell(
+            position: Position(row: 0, column: 0),
             hasQueen: true,
-            isConflicting: true,
-            isLightSquare: true
+            isConflicting: true
+        ),
+        onTap: { _ in }
+    )
+}
+
+#Preview("Dark square with conflict") {
+    CellView(
+        cell: Cell(
+            position: Position(row: 0, column: 1),
+            hasQueen: true,
+            isConflicting: true
         ),
         onTap: { _ in }
     )

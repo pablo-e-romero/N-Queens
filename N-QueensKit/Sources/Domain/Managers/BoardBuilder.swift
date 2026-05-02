@@ -20,8 +20,7 @@ public struct BoardBuilder {
                 let position = Position(row: row, column: column)
                 rowCells.append(
                     Cell(
-                        row: row,
-                        column: column,
+                        position: position,
                         hasQueen: gameState.placedQueens.contains(position),
                         isConflicting: gameState.conflictingPositions.contains(position)
                     )

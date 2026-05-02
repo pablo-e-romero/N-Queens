@@ -35,61 +35,40 @@ struct BoardView: View {
     }
 }
 
-#Preview {
+#Preview("4x4") {
     BoardView(
-        cells: [
-            [
-                .init(
-                    hasQueen: true,
-                    isConflicting: true,
-                    isLightSquare: true
-                ),
-                .init(
-                    hasQueen: false,
-                    isConflicting: true,
-                    isLightSquare: false
-                ),
-                .init(
-                    hasQueen: true,
-                    isConflicting: true,
-                    isLightSquare: true
-                )
-            ],
-            [
-                .init(
-                    hasQueen: false,
-                    isConflicting: false,
-                    isLightSquare: false
-                ),
-                .init(
-                    hasQueen: false,
-                    isConflicting: false,
-                    isLightSquare: true
-                ),
-                .init(
-                    hasQueen: false,
-                    isConflicting: false,
-                    isLightSquare: false
-                )
-            ],
-            [
-                .init(
-                    hasQueen: false,
-                    isConflicting: false,
-                    isLightSquare: true
-                ),
-                .init(
-                    hasQueen: true,
-                    isConflicting: false,
-                    isLightSquare: false
-                ),
-                .init(
-                    hasQueen: false,
-                    isConflicting: false,
-                    isLightSquare: true
-                )
-            ]
-        ],
+        cells: BoardBuilder().make(
+            from: GameState(
+                boardSize: 4,
+                placedQueens: [
+                    Position(row: 0, column: 0),
+                    Position(row: 0, column: 3),
+                ],
+                conflictingPositions: [
+                    Position(row: 0, column: 0),
+                    Position(row: 0, column: 3),
+                ]
+            )
+        ),
+        onCellTap: { _ in }
+    )
+}
+
+#Preview("20x20") {
+    BoardView(
+        cells: BoardBuilder().make(
+            from: GameState(
+                boardSize: 20,
+                placedQueens: [
+                    Position(row: 0, column: 0),
+                    Position(row: 0, column: 19),
+                ],
+                conflictingPositions: [
+                    Position(row: 0, column: 0),
+                    Position(row: 0, column: 19),
+                ]
+            )
+        ),
         onCellTap: { _ in }
     )
 }
