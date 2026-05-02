@@ -58,14 +58,18 @@ public final class GameViewModel {
         guard !gameState.won else { return }
 
         gameModel.updatePosition(position)
-        refresh()
+        gameState = gameModel.state
+        board = boardBuilder.make(from: gameState)
+        
         if gameState.won { handleWonGame() }
     }
     
     func onReset() {
         timeManager.stopTimer()
         gameModel.resetGame()
-        refresh()
+        gameState = gameModel.state
+        board = boardBuilder.make(from: gameState)
+
         timeManager.startTimer()
     }
     
@@ -76,11 +80,6 @@ public final class GameViewModel {
 }
 
 private extension GameViewModel {
-    func refresh() {
-        gameState = gameModel.state
-        board = boardBuilder.make(from: gameState)
-    }
-    
     func handleWonGame() {
         timeManager.stopTimer()
         
