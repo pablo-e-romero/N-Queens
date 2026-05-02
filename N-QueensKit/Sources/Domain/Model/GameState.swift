@@ -7,8 +7,8 @@
 
 public struct GameState {
     public let boardSize: Int
-    public let placedQueens: Set<Position>
-    public let conflictingPositions: Set<Position>
+    public var placedQueens: Set<Position>
+    public var conflictingPositions: Set<Position>
     
     public var placedQueensCount: Int {
         placedQueens.count
@@ -31,5 +31,10 @@ public struct GameState {
         self.boardSize = boardSize
         self.placedQueens = placedQueens
         self.conflictingPositions = conflictingPositions
+    }
+    
+    mutating func reset() {
+        placedQueens.removeAll()
+        conflictingPositions.removeAll()
     }
 }

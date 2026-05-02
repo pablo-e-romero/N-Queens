@@ -10,56 +10,82 @@ import Foundation
 @MainActor
 public final class GameModel {
     public private(set) var state: GameState
-    private var placedQueens: Set<Position>
-    private let conflictingPositionsManager: ConflictingPositionsManager
     
-    public init(
-        boardSize: Int,
-        placedQueens: Set<Position> = [],
-        conflictingPositionsManager: ConflictingPositionsManager = .init(),
-    ) {
-        self.placedQueens = placedQueens
-        self.conflictingPositionsManager = conflictingPositionsManager
-        
-        state = GameState(
-            boardSize: boardSize,
-            placedQueens: placedQueens,
-            conflictingPositions: conflictingPositionsManager.positions
-        )
+    public init(state: GameState) {
+        self.state = state
+    }
+    
+    public convenience init(boardSize: Int) {
+        self.init(state: GameState(boardSize: boardSize))
     }
     
     public func resetGame() {
-        placedQueens.removeAll()
-        conflictingPositionsManager.reset()
-        
-        state = GameState(
-            boardSize: state.boardSize,
-            placedQueens: placedQueens,
-            conflictingPositions: conflictingPositionsManager.positions
-        )
+        state.reset()
     }
     
     public func updatePosition(_ position: Position) {
-        let containsPosition = placedQueens.contains(position)
+        state.placedQueens = calculatePlacedQueensByUpdatingPosition(
+            position,
+            placedQueens: state.placedQueens,
+            boardSize: state.boardSize
+        )
+        
+        state.conflictingPositions = calculateConflictingPositions(
+            with: Array(state.placedQueens)
+        )
+    }
+}
+
+private extension GameModel {
+    func calculatePlacedQueensByUpdatingPosition(
+        _ position: Position,
+        placedQueens: Set<Position>,
+        boardSize: Int
+    ) -> Set<Position> {
+        var mutatablePlacedQueens = placedQueens
+        
+        let containsPosition = mutatablePlacedQueens.contains(position)
         
         guard
-            containsPosition || placedQueens.count < state.boardSize
+            containsPosition || mutatablePlacedQueens.count < boardSize
         else {
-            return
+            return placedQueens
         }
         
         if containsPosition {
-            placedQueens.remove(position)
+            mutatablePlacedQueens.remove(position)
         } else {
-            placedQueens.insert(position)
+            mutatablePlacedQueens.insert(position)
         }
         
-        conflictingPositionsManager.calculate(with: Array(placedQueens))
+        return mutatablePlacedQueens
+    }
+    
+    func calculateConflictingPositions(
+        with placedQueens: [Position]
+    ) -> Set<Position> {
+        func areConflicting(
+            _ first: Position,
+            _ second: Position
+        ) -> Bool {
+            first.row == second.row ||
+            first.column == second.column ||
+            abs(first.row - second.row) == abs(first.column - second.column)
+        }
         
-        state = GameState(
-            boardSize: state.boardSize,
-            placedQueens: placedQueens,
-            conflictingPositions: conflictingPositionsManager.positions
-        )
+        var positions: Set<Position> = []
+
+        for i in 0..<placedQueens.count {
+            for j in (i + 1)..<placedQueens.count {
+                let first = placedQueens[i]
+                let second = placedQueens[j]
+                if areConflicting(first, second) {
+                    positions.insert(first)
+                    positions.insert(second)
+                }
+            }
+        }
+        
+        return positions
     }
 }
