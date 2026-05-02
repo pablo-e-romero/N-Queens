@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum Route: Hashable {
-    case game(Int)
+    case game(boardSize: Int)
     case bestTimes
 }
 
@@ -28,7 +28,7 @@ public struct GameFlow: View {
             GameSetupView(
                 viewModel: GameSetupViewModel(
                     startGame: { boardSize in
-                        route.append(.game(boardSize))
+                        route.append(.game(boardSize: boardSize))
                     },
                     showBestTimes: {
                         route.append(.bestTimes)
