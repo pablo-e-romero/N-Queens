@@ -46,7 +46,7 @@ private struct EmptyState: View {
 }
 
 private struct GamesList: View {
-    let games: [BestTimesViewModel.WonGameInfo]
+    let games: [BestTimesViewModel.WonGameInfoDisplayModel]
     
     var body: some View {
         List {

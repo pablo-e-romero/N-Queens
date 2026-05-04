@@ -15,7 +15,7 @@ public protocol BestTimesViewModelFactory {
 
 @Observable
 public final class BestTimesViewModel {
-    struct WonGameInfo {
+    struct WonGameInfoDisplayModel {
         let formattedTime: String
         let boardSize: String
     }
@@ -24,7 +24,7 @@ public final class BestTimesViewModel {
         case loading
         case empty
         case error
-        case loaded([WonGameInfo])
+        case loaded([WonGameInfoDisplayModel])
     }
 
     private(set) var state: State = .loading
@@ -43,16 +43,20 @@ public final class BestTimesViewModel {
             let games = try await wonGamesRepository
                 .fetchGames()
                 .sorted { $0.timeElapsed < $1.timeElapsed }
-                .map {
-                    WonGameInfo(
-                        formattedTime: TimeFormatter.formattedTime($0.timeElapsed),
-                        boardSize: "\($0.positions.count)"
-                    )
-                }
+                .map(WonGameInfoDisplayModel.init(with:))
             
             state = games.isEmpty ? .empty : .loaded(games)
         } catch {
             state = .error
         }
+    }
+}
+
+private extension BestTimesViewModel.WonGameInfoDisplayModel {
+    init(with domain: WonGameInfo) {
+        self = .init(
+            formattedTime: domain.timeElapsed.formatted(.timeCounter),
+            boardSize: "\(domain.positions.count)"
+        )
     }
 }

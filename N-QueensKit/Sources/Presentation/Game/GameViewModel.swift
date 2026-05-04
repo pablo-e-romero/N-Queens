@@ -46,7 +46,7 @@ public final class GameViewModel {
         self.board = boardBuilder.make(from: gameState)
 
         timeManager.onTimeUpdate = { [weak self] in
-            self?.timeElapsedFormatted = TimeFormatter.formattedTime($0)
+            self?.timeElapsedFormatted = $0.formatted(.timeCounter)
         }
     }
     
