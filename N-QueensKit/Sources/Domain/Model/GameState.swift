@@ -5,7 +5,7 @@
 //  Created by Pablo Romero on 26/04/2026.
 //
 
-public struct GameState {
+public struct GameState: Equatable {
     public let boardSize: Int
     public var placedQueens: Set<Position>
     public var conflictingPositions: Set<Position>

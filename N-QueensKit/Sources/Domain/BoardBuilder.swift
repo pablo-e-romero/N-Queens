@@ -6,9 +6,7 @@
 //
 
 public struct BoardBuilder {
-    public init() {}
-    
-    public func make(from gameState: GameState) -> [[Cell]] {
+    public static func make(from gameState: GameState) -> [[Cell]] {
         var cells = [[Cell]]()
         
         for row in 0..<gameState.boardSize {

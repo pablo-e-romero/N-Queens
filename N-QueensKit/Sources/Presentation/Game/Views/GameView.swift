@@ -10,8 +10,15 @@ import Domain
 
 struct GameView: View {
     @State var viewModel: GameViewModel
+    @State var board: [[Cell]]
+    
     private let softFeedback = UIImpactFeedbackGenerator(style: .soft)
     private let heavyFeedback = UIImpactFeedbackGenerator(style: .heavy)
+    
+    init(viewModel: GameViewModel) {
+        self.viewModel = viewModel
+        self.board = BoardBuilder.make(from: viewModel.gameState)
+    }
 
     var body: some View {
         VStack(spacing: 16) {
@@ -30,7 +37,7 @@ struct GameView: View {
             .padding(.horizontal)
             
             BoardView(
-                cells: viewModel.board,
+                cells: board,
                 onCellTap: { position in
                     softFeedback.impactOccurred()
                     viewModel.onCellTap(position)
@@ -90,6 +97,9 @@ struct GameView: View {
         }
         .background(Color.AppTheme.background)
         .task(viewModel.onTask)
+        .onChange(of: viewModel.gameState) { _, newValue in
+            board = BoardBuilder.make(from: newValue)
+        }
     }
 }
 

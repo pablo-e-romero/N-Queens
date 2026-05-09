@@ -37,7 +37,7 @@ struct BoardView: View {
 
 #Preview("4x4") {
     BoardView(
-        cells: BoardBuilder().make(
+        cells: BoardBuilder.make(
             from: GameState(
                 boardSize: 4,
                 placedQueens: [
@@ -56,7 +56,7 @@ struct BoardView: View {
 
 #Preview("20x20") {
     BoardView(
-        cells: BoardBuilder().make(
+        cells: BoardBuilder.make(
             from: GameState(
                 boardSize: 20,
                 placedQueens: [
