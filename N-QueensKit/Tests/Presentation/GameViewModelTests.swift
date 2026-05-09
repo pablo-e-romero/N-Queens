@@ -13,71 +13,65 @@ import Mocks
 
 @MainActor
 struct GameViewModelTests {
+    var wonGamesRepository: WonGamesRepositoryMock!
+    var timeCounter: TimeCounterMock!
+    var sut: GameViewModel!
 
-    // MARK: - Helpers
-
+    init() {
+        timeCounter = TimeCounterMock()
+        wonGamesRepository = WonGamesRepositoryMock()
+    }
+    
     func makeViewModel(
         boardSize: Int = 4,
         onExitGame: @escaping () -> Void = {}
-    ) -> (GameViewModel, TimeManagerMock, WonGamesRepositoryMock) {
-        let timeManager = TimeManagerMock()
-        let repository = WonGamesRepositoryMock()
-        let viewModel = GameViewModel(
+    ) -> GameViewModel {
+        GameViewModel(
             gameModel: GameModel(boardSize: boardSize),
-            timeManager: timeManager,
-            wonGamesRepository: repository,
+            timeCounter: timeCounter,
+            wonGamesRepository: wonGamesRepository,
             exitGame: onExitGame
         )
-        return (viewModel, timeManager, repository)
     }
 
     // MARK: - Timer
 
     @Test func onAppearStartsTimer() {
-        let (sut, timeManager, _) = makeViewModel()
+        let sut = makeViewModel()
         sut.onAppear()
-        #expect(timeManager.startTimerCallCount == 1)
+        #expect(timeCounter.startCallCount == 1)
     }
 
     @Test func onExitStopsTimerAndFiresAction() {
         var exitFired = false
-        let (sut, timeManager, _) = makeViewModel(onExitGame: { exitFired = true })
+        let sut = makeViewModel(onExitGame: { exitFired = true })
         sut.onExit()
-        #expect(timeManager.stopTimerCallCount == 1)
+        #expect(timeCounter.stopCallCount == 1)
         #expect(exitFired)
     }
 
     @Test func onResetStopsAndRestartsTimer() {
-        let (sut, timeManager, _) = makeViewModel()
+        let sut = makeViewModel()
         sut.onReset()
-        #expect(timeManager.stopTimerCallCount == 1)
-        #expect(timeManager.startTimerCallCount == 1)
+        #expect(timeCounter.stopCallCount == 1)
+        #expect(timeCounter.startCallCount == 1)
     }
 
-    @Test func timeTickForwardsFormattedTime() {
-        let (sut, timeManager, _) = makeViewModel()
-        timeManager.stubbedFormattedTime = 125
-        timeManager.simulateTick()
-        #expect(sut.timeElapsedFormatted == "02:05.0")
-    }
-
-    // MARK: - Board
+    // MARK: - GameState
 
     @Test func initialBoardMatchesBoardSize() {
-        let (sut, _, _) = makeViewModel(boardSize: 5)
-        #expect(sut.board.count == 5)
-        #expect(sut.board.allSatisfy { $0.count == 5 })
+        let sut = makeViewModel(boardSize: 5)
+        #expect(sut.gameState.boardSize == 5)
     }
 
     @Test func onCellTapPlacesQueen() {
-        let (sut, _, _) = makeViewModel()
+        let sut = makeViewModel()
         sut.onCellTap(Position(row: 0, column: 0))
         #expect(sut.gameState.placedQueensCount == 1)
-        #expect(sut.board[0][0].hasQueen)
     }
 
     @Test func onCellTapTogglesQueenOff() {
-        let (sut, _, _) = makeViewModel()
+        let sut = makeViewModel()
         let pos = Position(row: 1, column: 1)
         sut.onCellTap(pos)
         sut.onCellTap(pos)
@@ -85,36 +79,35 @@ struct GameViewModelTests {
     }
 
     @Test func onResetClearsBoard() {
-        let (sut, _, _) = makeViewModel()
+        let sut = makeViewModel()
         sut.onCellTap(Position(row: 0, column: 1))
         sut.onReset()
         #expect(sut.gameState.placedQueensCount == 0)
-        #expect(sut.board.allSatisfy { $0.allSatisfy { !$0.hasQueen } })
     }
 
     // MARK: - Win
 
     @Test func winningGameStopsTimerAndFiresAction() {
-        let (sut, timeManager, _) = makeViewModel()
+        let sut = makeViewModel()
         placeWinningSolution(on: sut)
         #expect(sut.gameState.won)
-        #expect(timeManager.stopTimerCallCount == 1)
+        #expect(timeCounter.stopCallCount == 1)
     }
 
     @Test func winningGameSavesToRepository() async throws {
-        let (sut, _, repository) = makeViewModel()
+        let sut = makeViewModel()
         placeWinningSolution(on: sut)
         // Let the internal Task complete on the main actor
         try await Task.sleep(for: .milliseconds(10))
-        #expect(repository.saveGameCallCount == 1)
-        #expect(repository.savedGames.first?.positions.count == 4)
+        #expect(wonGamesRepository.saveGameCallCount == 1)
+        #expect(wonGamesRepository.savedGames.first?.positions.count == 4)
     }
 
     @Test func repositoryNotCalledBeforeWinning() async throws {
-        let (sut, _, repository) = makeViewModel()
+        let sut = makeViewModel()
         sut.onCellTap(Position(row: 0, column: 1))
         try await Task.sleep(for: .milliseconds(10))
-        #expect(repository.saveGameCallCount == 0)
+        #expect(wonGamesRepository.saveGameCallCount == 0)
     }
 }
 

@@ -9,26 +9,30 @@ import Domain
 import Foundation
 
 @MainActor
-public final class TimeManagerMock: TimeManagerProtocol {
-    public var onTimeUpdate: ((_ timeInterval: TimeInterval) -> Void)?
+public final class TimeCounterMock: TimeCounterProtocol {
+    public let timeElapsedStream: AsyncStream<TimeInterval>
+    private let timeElapsedContinuation: AsyncStream<TimeInterval>.Continuation
+
     public private(set) var timeElapsed: TimeInterval = 0
 
-    public private(set) var startTimerCallCount = 0
-    public private(set) var stopTimerCallCount = 0
+    public private(set) var startCallCount = 0
+    public private(set) var stopCallCount = 0
 
-    public var stubbedFormattedTime: TimeInterval = 0
-
-    public init() {}
+    public init() {
+        let (stream, continuation) = AsyncStream<TimeInterval>.makeStream()
+        timeElapsedStream = stream
+        timeElapsedContinuation = continuation
+    }
     
-    public func startTimer() {
-        startTimerCallCount += 1
+    public func start() {
+        startCallCount += 1
     }
 
-    public func stopTimer() {
-        stopTimerCallCount += 1
+    public func stop() {
+        stopCallCount += 1
     }
 
-    public func simulateTick() {
-        onTimeUpdate?(stubbedFormattedTime)
+    public func simulateTick(_ timeInterval: TimeInterval) {
+        timeElapsedContinuation.yield(timeInterval)
     }
 }

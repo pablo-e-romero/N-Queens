@@ -13,12 +13,15 @@ import Mocks
 
 @MainActor
 struct BestTimesViewModelTests {
-
-    // MARK: - Helpers
-
-    func makeViewModel() -> (BestTimesViewModel, WonGamesRepositoryMock) {
-        let repository = WonGamesRepositoryMock()
-        return (BestTimesViewModel(wonGamesRepository: repository), repository)
+    var wonGamesRepository: WonGamesRepositoryMock!
+    var sut: BestTimesViewModel!
+    
+    init() {
+        self.wonGamesRepository = WonGamesRepositoryMock()
+    }
+    
+    func makeViewModel() -> BestTimesViewModel {
+        BestTimesViewModel(wonGamesRepository: wonGamesRepository)
     }
 
     func makeWonGame(timeElapsed: TimeInterval, boardSize: Int) -> Domain.WonGameInfo {
@@ -29,7 +32,7 @@ struct BestTimesViewModelTests {
     // MARK: - Initial state
 
     @Test func initialStateIsLoading() {
-        let (sut, _) = makeViewModel()
+        let sut = makeViewModel()
         guard case .loading = sut.state else {
             Issue.record("Expected .loading, got \(sut.state)")
             return
@@ -39,13 +42,13 @@ struct BestTimesViewModelTests {
     // MARK: - onTask
 
     @Test func onTaskFetchesFromRepository() async {
-        let (sut, repository) = makeViewModel()
+        let sut = makeViewModel()
         await sut.onTask()
-        #expect(repository.fetchGamesCallCount == 1)
+        #expect(wonGamesRepository.fetchGamesCallCount == 1)
     }
 
     @Test func onTaskWithEmptyResultSetsEmptyState() async {
-        let (sut, _) = makeViewModel()
+        let sut = makeViewModel()
         await sut.onTask()
         guard case .empty = sut.state else {
             Issue.record("Expected .empty, got \(sut.state)")
@@ -54,8 +57,8 @@ struct BestTimesViewModelTests {
     }
 
     @Test func onTaskWithGamesSetsLoadedState() async {
-        let (sut, repository) = makeViewModel()
-        repository.stubbedGames = [makeWonGame(timeElapsed: 30, boardSize: 4)]
+        let sut = makeViewModel()
+        wonGamesRepository.stubbedGames = [makeWonGame(timeElapsed: 30, boardSize: 4)]
         await sut.onTask()
         guard case .loaded(let games) = sut.state else {
             Issue.record("Expected .loaded, got \(sut.state)")
@@ -67,8 +70,8 @@ struct BestTimesViewModelTests {
     }
 
     @Test func onTaskSortsGamesByTimeAscending() async {
-        let (sut, repository) = makeViewModel()
-        repository.stubbedGames = [
+        let sut = makeViewModel()
+        wonGamesRepository.stubbedGames = [
             makeWonGame(timeElapsed: 60, boardSize: 4),
             makeWonGame(timeElapsed: 30, boardSize: 4),
             makeWonGame(timeElapsed: 45, boardSize: 4),
@@ -84,8 +87,8 @@ struct BestTimesViewModelTests {
     }
 
     @Test func onTaskWithErrorSetsErrorState() async {
-        let (sut, repository) = makeViewModel()
-        repository.stubbedError = URLError(.badServerResponse)
+        let sut = makeViewModel()
+        wonGamesRepository.stubbedError = URLError(.badServerResponse)
         await sut.onTask()
         guard case .error = sut.state else {
             Issue.record("Expected .error, got \(sut.state)")
@@ -94,8 +97,8 @@ struct BestTimesViewModelTests {
     }
 
     @Test func boardSizeStringReflectsPositionCount() async {
-        let (sut, repository) = makeViewModel()
-        repository.stubbedGames = [makeWonGame(timeElapsed: 10, boardSize: 8)]
+        let sut = makeViewModel()
+        wonGamesRepository.stubbedGames = [makeWonGame(timeElapsed: 10, boardSize: 8)]
         await sut.onTask()
         guard case .loaded(let games) = sut.state else {
             Issue.record("Expected .loaded, got \(sut.state)")

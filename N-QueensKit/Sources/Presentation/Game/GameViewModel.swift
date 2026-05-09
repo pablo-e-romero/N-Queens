@@ -25,6 +25,8 @@ public final class GameViewModel {
     private let timeCounter: TimeCounterProtocol
     private let wonGamesRepository: WonGamesRepositoryProtocol
     private let exitGame: () -> Void
+
+    private var timeCounterSubscription: Task<Void, Never>?
     
     public init(
         gameModel: GameModel,
@@ -39,9 +41,9 @@ public final class GameViewModel {
         self.gameState = gameModel.state
     }
     
-    func onTask() async {
+    func onAppear() {
+        subscribeToTimeCounter()
         timeCounter.start()
-        await subscribeToTimeCounter()
     }
     
     func onCellTap(_ position: Position) {
@@ -57,7 +59,7 @@ public final class GameViewModel {
         timeCounter.stop()
         gameModel.resetGame()
         gameState = gameModel.state
-        timeCounter.stop()
+        timeCounter.start()
     }
     
     func onExit() {
@@ -67,9 +69,11 @@ public final class GameViewModel {
 }
 
 private extension GameViewModel {
-    func subscribeToTimeCounter() async {
-        for await value in timeCounter.timeElapsedStream {
-            timeElapsedFormatted = value.formatted(.timeCounter)
+    func subscribeToTimeCounter() {
+        timeCounterSubscription = Task { [weak self, timeCounter] in
+            for await value in timeCounter.timeElapsedStream {
+                self?.timeElapsedFormatted = value.formatted(.timeCounter)
+            }
         }
     }
 

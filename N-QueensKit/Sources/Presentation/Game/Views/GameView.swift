@@ -96,7 +96,7 @@ struct GameView: View {
             }
         }
         .background(Color.AppTheme.background)
-        .task(viewModel.onTask)
+        .onAppear(perform: viewModel.onAppear)
         .onChange(of: viewModel.gameState) { _, newValue in
             board = BoardBuilder.make(from: newValue)
         }
