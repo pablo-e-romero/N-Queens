@@ -89,7 +89,7 @@ struct GameView: View {
             }
         }
         .background(Color.AppTheme.background)
-        .onAppear(perform: viewModel.onAppear)
+        .task(viewModel.onTask)
     }
 }
 

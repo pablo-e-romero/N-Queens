@@ -23,20 +23,22 @@ public final class GameViewModel {
     private(set) var timeElapsedFormatted = ""
 
     private var gameModel: GameModel
-    private let timeManager: TimeManagerProtocol
+    private let timeCounter: TimeCounterProtocol
+    private var timeCounterSubscription: Task<Void, Never>?
+    
     private let boardBuilder: BoardBuilder
     private let wonGamesRepository: WonGamesRepositoryProtocol
     private let exitGame: () -> Void
     
     public init(
         gameModel: GameModel,
-        timeManager: TimeManagerProtocol,
+        timeCounter: TimeCounterProtocol,
         boardBuilder: BoardBuilder = .init(),
         wonGamesRepository: WonGamesRepositoryProtocol,
         exitGame: @escaping () -> Void
     ) {
         self.gameModel = gameModel
-        self.timeManager = timeManager
+        self.timeCounter = timeCounter
         self.boardBuilder = boardBuilder
         self.wonGamesRepository = wonGamesRepository
         self.exitGame = exitGame
@@ -44,14 +46,11 @@ public final class GameViewModel {
         let gameState = gameModel.state
         self.gameState = gameState        
         self.board = boardBuilder.make(from: gameState)
-
-        timeManager.onTimeUpdate = { [weak self] in
-            self?.timeElapsedFormatted = $0.formatted(.timeCounter)
-        }
     }
     
-    func onAppear() {
-        timeManager.startTimer()
+    func onTask() async {
+        timeCounter.start()
+        await subscribeToTimeCounter()
     }
     
     func onCellTap(_ position: Position) {
@@ -65,28 +64,35 @@ public final class GameViewModel {
     }
     
     func onReset() {
-        timeManager.stopTimer()
+        timeCounter.stop()
         gameModel.resetGame()
         gameState = gameModel.state
         board = boardBuilder.make(from: gameState)
 
-        timeManager.startTimer()
+        timeCounter.stop()
     }
     
     func onExit() {
-        timeManager.stopTimer()
+        timeCounter.stop()
         exitGame()
     }
 }
 
 private extension GameViewModel {
+    func subscribeToTimeCounter() async {
+        for await value in timeCounter.timeElapsedStream {
+            timeElapsedFormatted = value.formatted(.timeCounter)
+        }
+    }
+
     func handleWonGame() {
-        timeManager.stopTimer()
+        let timeElapsed = timeCounter.timeElapsed
+        timeCounter.stop()
         
         Task {
             try await wonGamesRepository.saveGame(
                 WonGameInfo(
-                    timeElapsed: timeManager.timeElapsed,
+                    timeElapsed: timeElapsed,
                     positions: Array(gameState.placedQueens)
                 )
             )
